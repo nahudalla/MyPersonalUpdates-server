@@ -29,15 +29,19 @@ public class HTTPServer {
         this.setupErrorHandling();
         this.setupContentType();
         this.setupGzip();
+    }
 
-        this.setupSessionControl(new String[]{"login", "signup"});
+    public void addService(String path, Service service, boolean receivesData)
+    {
+        if (receivesData)
+            Spark.post("/"+path, new RouteHandler(service));
+        else
+            Spark.get("/"+path, new RouteHandler(service));
+    }
 
-        // Unauthenticated users can only access these paths
-        setPostRoute("login", new LoginService());
-        setPostRoute("signup", new SignupService());
-
-        // Authenticated users can access any path
-        setGetRoute("logout", new LogoutService());
+    public void addService(String path, Service service)
+    {
+        this.addService(path, service, false);
     }
 
     private void setPostRoute(String path, Service service) {
@@ -48,7 +52,7 @@ public class HTTPServer {
         Spark.get("/"+path, new RouteHandler(service));
     }
 
-    private void setupSessionControl(String[] publicPaths) {
+    public void setupSessionControl(String[] publicPaths) {
         Spark.before((req, res) -> {
             com.mypersonalupdates.webserver.requests.Request request = new SparkRequestWrapper(req, res);
 
