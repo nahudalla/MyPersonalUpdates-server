@@ -11,8 +11,7 @@ public class UpdatesProvidersManager {
         return ourInstance;
     }
 
-    private UpdatesProvidersManager() {
-    }
+    private UpdatesProvidersManager() {     }
 
     private Map<Integer, UpdatesProvider> providers = new HashMap<>();
     private UpdatesProvidersManager instance;
