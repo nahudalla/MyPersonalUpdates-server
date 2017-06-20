@@ -68,7 +68,7 @@ public class HTTPServer {
                     ));
             } else {
                 if(isPublicPath)
-                    Spark.halt(401, this.gson.toJson(
+                    Spark.halt(200, this.gson.toJson(
                             new Message("not-available", "Public services can only be accessed by anonymous users.")
                     ));
             }
@@ -109,6 +109,7 @@ public class HTTPServer {
             try {
                 response = this.handler.handle(request);
             } catch(InvalidRequestBodyExeption e) {
+                // TODO: is this a server error?
                 errorObj = new Message("invalid-request", e.getMessage());
             }
 
