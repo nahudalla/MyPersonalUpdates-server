@@ -1,5 +1,7 @@
 package com.mypersonalupdates.webserver;
 
+import com.mypersonalupdates.webserver.requests.Request;
+import com.mypersonalupdates.webserver.responses.Message;
 import com.mypersonalupdates.webserver.services.LoginService;
 import com.mypersonalupdates.webserver.services.LogoutService;
 import com.mypersonalupdates.webserver.services.SignupService;
@@ -29,6 +31,7 @@ public class WebServer {
         this.httpServer.addService("login", new LoginService(), true);
         this.httpServer.addService("signup", new SignupService(), true);
         this.httpServer.addService("logout", new LogoutService());
+        this.httpServer.addService("ping", (Request request) -> new Message("pong"));
     }
 
     public void init() {
