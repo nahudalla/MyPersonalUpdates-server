@@ -1,6 +1,5 @@
 package com.mypersonalupdates.users;
 
-import com.mypersonalupdates.Category;
 import com.mypersonalupdates.db.DBConnection;
 import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.db.actions.UserActions;

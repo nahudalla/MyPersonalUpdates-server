@@ -1,4 +1,4 @@
-package com.mypersonalupdates;
+package com.mypersonalupdates.log;
 
 import java.util.Date;
 

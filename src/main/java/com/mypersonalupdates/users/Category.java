@@ -1,6 +1,10 @@
-package com.mypersonalupdates;
+package com.mypersonalupdates.users;
+
+import com.mypersonalupdates.Filter;
+import com.mypersonalupdates.providers.UpdatesProvider;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Category {
 
@@ -8,7 +12,7 @@ public class Category {
 
     private String name;
     private Filter filter;
-    private ArrayList<UpdatesProvider> updatesProviders = new ArrayList<>();
+    private List<UpdatesProvider> updatesProviders = new ArrayList<>();
     private Integer ID = null;
 
     private Category() { }
@@ -17,12 +21,15 @@ public class Category {
         this.ID = ID;
     }
 
-    public void create(String name, Filter filter){
-        //Le puse que retorna void para que no tire error, pero va Category
+    public Category create(String name, Filter filter){
+        return null;
+        //TODO: Implementarlo con la base
     }
 
-    public void fromID(Integer ID) {
-        //Le puse que retorna void para que no tire error, pero va Category
+    public Category fromID(Integer ID) {
+        return null;
+
+        //TODO: Implementarlo con la base
     }
 
     public Integer getID() {
@@ -33,12 +40,13 @@ public class Category {
         return  this.name;
     }
 
-    public ArrayList<UpdatesProvider> getProviders(){
+    public List<UpdatesProvider> getProviders(){
         return this.updatesProviders;
     }
 
-    public void remove() {
-        //Le puse que retorna void para que no tire error, pero va Boolean
+    public boolean remove() {
+        return true;
+        //TODO: Implementarlo con la base
     }
 
     public Filter getFilter() {

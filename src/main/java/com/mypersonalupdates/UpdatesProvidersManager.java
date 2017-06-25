@@ -1,5 +1,7 @@
 package com.mypersonalupdates;
 
+import com.mypersonalupdates.providers.UpdatesProvider;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +16,6 @@ public class UpdatesProvidersManager {
     private UpdatesProvidersManager() {     }
 
     private Map<Integer, UpdatesProvider> providers = new HashMap<>();
-    private UpdatesProvidersManager instance;
 
     public Collection<UpdatesProvider> getProviders() {
         return this.providers.values();
