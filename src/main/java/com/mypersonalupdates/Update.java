@@ -2,6 +2,7 @@ package com.mypersonalupdates;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public interface Update {
 
@@ -9,13 +10,15 @@ public interface Update {
     String getSource();
     String getText();
     String getID();
-    ArrayList<String> getLinks();
-    ArrayList<String> getMultimedia();
-    ArrayList<String> getHashtags();
-    ArrayList<String> getMentions();
     Date getTimestamps();
+
+
+    List<String> getLinks();
+    List<String> getMultimedia();
+    List<String> getHashtags();
+    List<String> getMentions();
     Integer getLikesCount();
     Integer getSharedCount();
-    boolean isOwnStatus();
-    void getOriginalStatus();   //TODO: modificar el tipo
+    boolean isOwnUpdate();
+    Update getOriginalUpdate();
 }
