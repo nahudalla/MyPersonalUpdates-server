@@ -5,9 +5,12 @@ import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.db.actions.UserActions;
 
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
-    private Integer id = null;
+    private Integer id = null ;
+    private List<Category> categories = new ArrayList<>(); // TODO: Modificarlo desde la base de datos
 
     private static String sha256(String value) {
         try{
@@ -121,4 +124,18 @@ public class User {
             throw new DBException(e);
         }
     }
+
+    public List<Category> getCategories() {
+        return  this.categories;
+
+        // TODO: Modificarlo desde la base de datos
+    }
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
+
+        // TODO: Modificarlo desde la base de datos
+    }
+
+    // TODO: Remove
 }
