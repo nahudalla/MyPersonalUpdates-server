@@ -1,24 +1,43 @@
 package com.mypersonalupdates.providers.twitter;
 
+import com.mypersonalupdates.Filter;
+import com.mypersonalupdates.Update;
+import com.mypersonalupdates.UpdatesConsumer;
 import com.mypersonalupdates.db.DBException;
+import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.users.User;
+import com.sun.istack.internal.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
-// TODO: implements UpdatesProvider
-public class TwitterProvider {
-    public static void main(String []args) throws DBException {
+public class TwitterProvider implements UpdatesProvider {
+    public static void main(String []args) {
+
         TwitterProvider provider = new TwitterProvider();
-        User user = User.fromUsername("nahuel");
-        provider.subscribe(user);
+
+        User user = null;
+        try {
+            user = User.fromUsername("nahuel");
+        } catch (DBException e) {
+            System.err.println("Could not obtain user from database.");
+        }
+
+        provider.subscribe(user, new Filter(), update -> {
+            if(update.isOwnUpdate())
+                System.out.println("@" + update.getSource()+": "+update.getText());
+            else {
+                Update original = update.getOriginalUpdate();
+                System.out.println("@" + update.getSource() + " retweeted @" + original.getSource() + ": " + original.getText());
+            }
+        });
     }
 
-    //TODO: change to Hashtable<Integer, UpdatesConsumer>
     private final Hashtable<Integer, TwitterStream> streams = new Hashtable<>();
 
     // TODO: get provider ID from somewhere? (UpdatesProviderManager.getNewProviderId()?)
     // TODO: fix diagram
-    public int getId() {return 0;}
+    public Integer getID() {return 0;}
 
     public List<String> getAcceptedFilterFields() {
         // TODO: return accepted fields
@@ -26,17 +45,15 @@ public class TwitterProvider {
         return null;
     }
 
-    public int subscribe(User user/*, Filter filter, UpdatesConsumer consumer*/) {
-        // TODO: use filter and consumer properly
+    public Integer subscribe(User user, Filter filter, UpdatesConsumer consumer) {
         // TODO: update diagram
         TwitterStream stream = this.streams.computeIfAbsent(user.getId(), k -> new TwitterStream(user));
 
-        return stream.subscribe(/*filter, consumer*/);
+        return stream.subscribe(filter, consumer);
     }
 
-    public void unsubscribe(User user, int subscriberID) {
+    public boolean unsubscribe(User user, Integer subscriberID) {
         TwitterStream stream = this.streams.get(user.getId());
-        if(stream != null)
-            stream.unsubscribe(subscriberID);
+        return stream != null && stream.unsubscribe(subscriberID);
     }
 }
