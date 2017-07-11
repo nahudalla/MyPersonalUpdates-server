@@ -10,30 +10,21 @@ public class Category {
 
     //TODO : Modificarlo para que los datos esten en la base
 
+    // TODO: actualizar atributos
     private String name;
     private Filter filter;
     private List<UpdatesProvider> updatesProviders = new ArrayList<>();
     private Integer ID = null;
 
-    private Category() { }
-
+    // TODO: actualizar signature
     private Category(Integer ID) {
         this.ID = ID;
     }
 
+    // TODO: arreglar create(s)
     public Category create(String name, Filter filter){
         return null;
         //TODO: Implementarlo con la base
-    }
-
-    public Category fromID(Integer ID) {
-        return null;
-
-        //TODO: Implementarlo con la base
-    }
-
-    public Integer getID() {
-        return this.ID;
     }
 
     public String getName() {
@@ -53,19 +44,25 @@ public class Category {
         return this.filter;
     }
 
+    // TODO: actualizar signature
     public void setName(String name) {
         this.name = name;
     }
 
+    // TODO: actualizar signature
     public  void setFilter(Filter filter) {
         this.filter = filter;
     }
 
+    // TODO: actualizar signature
     public void addProvider(UpdatesProvider provider) {
         this.updatesProviders.add(provider);
     }
 
+    // TODO: actualizar signature
     public void removeProvider(UpdatesProvider provider) {
         this.updatesProviders.remove(provider);
     }
+
+    // TODO: implementar getName
 }

@@ -7,16 +7,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UpdatesProvidersManager {
-    private static UpdatesProvidersManager ourInstance = new UpdatesProvidersManager();
+    // TODO: usar hashtable
+    private Map<Integer, UpdatesProvider> providers = new HashMap<>();
 
+    private static UpdatesProvidersManager ourInstance = new UpdatesProvidersManager();
     public static UpdatesProvidersManager getInstance() {
         return ourInstance;
     }
+    // TODO: falta en diagrama el constructor privado
+    private UpdatesProvidersManager() {}
 
-    private UpdatesProvidersManager() {     }
-
-    private Map<Integer, UpdatesProvider> providers = new HashMap<>();
-
+    // TODO: actualizar signature en diagrama
     public Collection<UpdatesProvider> getProviders() {
         return this.providers.values();
     }
@@ -25,6 +26,7 @@ public class UpdatesProvidersManager {
         return this.providers.get(ID);
     }
 
+    // TODO: actualizar signature
     public void addProvider(UpdatesProvider updatesProvider) {
         this.providers.put(updatesProvider.getID(), updatesProvider);
     }

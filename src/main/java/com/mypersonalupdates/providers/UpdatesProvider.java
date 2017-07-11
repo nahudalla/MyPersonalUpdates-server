@@ -8,7 +8,11 @@ import java.util.List;
 
 public interface UpdatesProvider {
     Integer getID();
-    List<String> getAcceptedFilterFields();
+    // TODO: actualizar signature
     Integer subscribe (Filter filter, UpdatesConsumer cosumer);
+    // TODO: actualizar signature
     void unsubscribe (Integer subscriberID);
+
+    // TODO: agregar: getName, getDescription, getAttributes, stop, equals
+    // TODO: agregar equals a diagrama
 }
