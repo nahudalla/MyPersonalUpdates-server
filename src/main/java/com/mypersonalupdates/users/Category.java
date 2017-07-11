@@ -3,36 +3,38 @@ package com.mypersonalupdates.users;
 import com.mypersonalupdates.Filter;
 import com.mypersonalupdates.providers.UpdatesProvider;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class Category {
 
     //TODO : Modificarlo para que los datos esten en la base
 
-    // TODO: actualizar atributos
     private String name;
-    private Filter filter;
-    private List<UpdatesProvider> updatesProviders = new ArrayList<>();
-    private Integer ID = null;
+    private User user;
 
-    // TODO: actualizar signature
-    private Category(Integer ID) {
-        this.ID = ID;
+    private Category(User user, String name) {
+        this.user = user;
+        this.name = name;
     }
 
-    // TODO: arreglar create(s)
-    public Category create(String name, Filter filter){
+    public static Category create(User user, String name, Filter filter) {
+        System.err.println("Category.create no implementado.");
         return null;
-        //TODO: Implementarlo con la base
+    }
+
+    public static Category create(User user, String name) {
+        System.err.println("Category.create no implementado.");
+        return null;
     }
 
     public String getName() {
         return  this.name;
     }
 
-    public List<UpdatesProvider> getProviders(){
-        return this.updatesProviders;
+    public Collection<UpdatesProvider> getProviders(){
+        System.err.println("Category.getProviders no implementado.");
+        return null;
+        // TODO: implementar con la base
     }
 
     public boolean remove() {
@@ -41,28 +43,33 @@ public class Category {
     }
 
     public Filter getFilter() {
-        return this.filter;
+        System.err.println("Category.getFilter no implementado.");
+        return null;
+        // TODO: sacar de la base
     }
 
-    // TODO: actualizar signature
-    public void setName(String name) {
+    public boolean setName(String name) {
         this.name = name;
+        //TODO: actualizar con la base
+        System.err.println("Category.setName no implementado.");
+        return false;
     }
 
-    // TODO: actualizar signature
-    public  void setFilter(Filter filter) {
-        this.filter = filter;
+    public boolean setFilter(Filter filter) {
+        //TODO: actualizar con la base
+        System.err.println("Category.setFilter no implementado.");
+        return false;
     }
 
-    // TODO: actualizar signature
-    public void addProvider(UpdatesProvider provider) {
-        this.updatesProviders.add(provider);
+    public boolean addProvider(UpdatesProvider provider) {
+        //TODO: actualizar con la base
+        System.err.println("Category.addProvider no implementado.");
+        return false;
     }
 
-    // TODO: actualizar signature
-    public void removeProvider(UpdatesProvider provider) {
-        this.updatesProviders.remove(provider);
+    public boolean removeProvider(UpdatesProvider provider) {
+        //TODO: actualizar con la base
+        System.err.println("Category.removeProvider no implementado.");
+        return false;
     }
-
-    // TODO: implementar getName
 }
