@@ -23,12 +23,12 @@ public class NotFilter extends Filter{
 
     @Override
     public Collection<UpdatesProviderAttribute> getAttributtes(UpdatesProvider provider) {
-        return this.filter.getAttributtes(provider);
+        return null;
     }
 
     @Override
     public Collection<String> getValues(UpdatesProviderAttribute attr) {
-        return this.filter.getValues(attr);
+        return null;
     }
 
     @Override
