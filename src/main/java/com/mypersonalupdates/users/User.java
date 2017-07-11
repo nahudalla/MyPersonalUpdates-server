@@ -26,6 +26,8 @@ public class User {
         }
     }
 
+
+    // TODO: cambiar nombre a createNew
     public static User create(String username, String password) throws DBException {
         int rowsAffected;
 
@@ -47,6 +49,8 @@ public class User {
             return User.fromUsername(username);
     }
 
+
+    // TODO: cambiar nombre a getFromCredentials
     public static User fromCredentials(String username, String password) throws DBException {
         Integer UID;
 
@@ -68,6 +72,7 @@ public class User {
             return new User(UID);
     }
 
+    // TODO: cambiar nombre a getFromID
     public static User fromId(Integer id) throws DBException {
         Integer UID;
 
@@ -86,6 +91,7 @@ public class User {
             return new User(UID);
     }
 
+    // TODO: cambiar nombre a getFromUsername
     public static User fromUsername(String username) throws DBException {
         Integer UID;
 
@@ -104,15 +110,15 @@ public class User {
             return new User(UID);
     }
 
-    private User() {}
-
     private User(Integer id){
         this.id = id;
     }
 
+    // TODO: cambiar a getID
     public Integer getId() {
         return this.id;
     }
+
 
     public String getUsername() throws DBException {
         try {
@@ -131,11 +137,12 @@ public class User {
         // TODO: Modificarlo desde la base de datos
     }
 
+    // TODO: eliminar metodo
     public void addCategory(Category category) {
         this.categories.add(category);
 
         // TODO: Modificarlo desde la base de datos
     }
 
-    // TODO: Remove
+    // TODO: hacer: getPassword, remove, setAttribute, getAttribute
 }
