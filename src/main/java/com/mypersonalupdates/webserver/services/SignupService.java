@@ -24,7 +24,7 @@ public class SignupService implements Service {
             throw new InvalidRequestBodyExeption("Not all required fields were received.");
 
         if(!SignupService.usernamePattern.matcher(signupRequest.getUser()).matches() ||
-                User.fromUsername(signupRequest.getUser()) != null)
+                User.getFromUsername(signupRequest.getUser()) != null)
             return new Message("signup-username-unavailable");
 
         if(!SignupService.passwordLengthPattern.matcher(signupRequest.getPassword()).matches() ||
@@ -33,7 +33,7 @@ public class SignupService implements Service {
                 !SignupService.passwordNumberPattern.matcher(signupRequest.getPassword()).matches())
             return new Message("signup-invalid-password");
 
-        User user = User.create(signupRequest.getUser(), signupRequest.getPassword());
+        User user = User.createNew(signupRequest.getUser(), signupRequest.getPassword());
 
         if(user == null)
             return new Error(500, "Unable to create new user.");
