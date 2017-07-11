@@ -11,8 +11,8 @@ import java.util.LinkedList;
 public class AttributeFilter extends Filter{
 
     private Integer ID;
-    UpdatesProviderAttribute attr;
-    String value;
+    private UpdatesProviderAttribute attr;
+    private String value;
 
     private AttributeFilter(Integer ID, UpdatesProviderAttribute attr, String value) {
         this.ID = ID;
