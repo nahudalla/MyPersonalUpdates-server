@@ -28,12 +28,12 @@ public class LoginService implements Service{
         if(loginRequest == null || loginRequest.getUser() == null || loginRequest.getPassword() == null)
             throw new InvalidRequestBodyExeption("Not all required fields were received.");
 
-        User user = User.fromCredentials(loginRequest.getUser(), loginRequest.getPassword());
+        User user = User.getFromCredentials(loginRequest.getUser(), loginRequest.getPassword());
 
         if(user == null)
             return new Message("login-invalid-credentials");
 
-        request.getSession().set(LoginService.USERID_SESSION_FIELD_NAME, user.getId().toString());
+        request.getSession().set(LoginService.USERID_SESSION_FIELD_NAME, user.getID().toString());
 
         return new Message("login-ok");
     }
