@@ -1,6 +1,7 @@
 package com.mypersonalupdates;
 
 
+import com.mypersonalupdates.filters.FilterValue;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
@@ -17,12 +18,11 @@ public abstract class Filter {
 
     public abstract Collection<UpdatesProviderAttribute> getAttributtes(UpdatesProvider provider);
 
-    public abstract Collection<String> getValues(UpdatesProviderAttribute attr);
+    public abstract Collection<FilterValue> getValues(UpdatesProviderAttribute attr);
 
     public abstract boolean test(Update update);
 
     public abstract Integer getID();
 
-    //TODO: Agregar en diagrama, en la jerarquia de filtros, el TEST
     //TODO: Cambiar en todo el diagrama los LIST y SET por COLLECTION
 }

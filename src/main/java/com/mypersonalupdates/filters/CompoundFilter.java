@@ -36,8 +36,8 @@ public abstract class CompoundFilter extends Filter {
     }
 
     @Override
-    public Collection<String> getValues(UpdatesProviderAttribute attr) {
-        Collection<String> valuesF1, valuesF2;
+    public Collection<FilterValue> getValues(UpdatesProviderAttribute attr) {
+        Collection<FilterValue> valuesF1, valuesF2;
 
         valuesF1 = this.filter1.getValues(attr);
         valuesF2 = this.filter2.getValues(attr);

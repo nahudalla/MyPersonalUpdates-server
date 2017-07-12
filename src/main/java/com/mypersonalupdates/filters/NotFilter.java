@@ -27,7 +27,7 @@ public class NotFilter extends Filter{
     }
 
     @Override
-    public Collection<String> getValues(UpdatesProviderAttribute attr) {
+    public Collection<FilterValue> getValues(UpdatesProviderAttribute attr) {
         return null;
     }
 
