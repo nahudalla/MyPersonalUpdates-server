@@ -20,36 +20,25 @@ public class PartialAttributeFilter extends AttributeFilter{
 
     @Override
     public Collection<FilterValue> getValues(UpdatesProviderAttribute attr) {
-        Collection<FilterValue> values = new LinkedList<>();
-        values.add(new FilterValue(this.value, true));
-
-        return values;
-
-        /*
-        No entiendo por qué pasa un UpdatesProviderAttribute por paramentro
-        en la implementación pasada, tampoco lo usamos. A demás el padre lo tiene como atributo.
-        */
+        // TODO: implementar public boolean equals(UpdatesProviderAttribute other) en UpdatesProviderAttribute
+        if(this.attr.equals(attr)) {
+            Collection<FilterValue> values = new LinkedList<>();
+            values.add(new FilterValue(this.value, true));
+            return values;
+        }
+        return null;
     }
 
     @Override
     public boolean test(Update update) {
-        Collection<String> attributeValues = new LinkedList<>();
-        attributeValues.addAll(update.getAttributeValues(this.attr));
+        Collection<String> attributeValues = update.getAttributeValues(this.attr);
 
         if (attributeValues != null)
             for (String value : attributeValues) {
-                if (value.indexOf(value) > -1)
+                if (value.toLowerCase().contains(this.value))
                     return true;
             }
 
         return false;
-
-        //TODO: Decidir sí respetamos mayúsculas/minusculas o no
-        //TODO: Decidir búsqueda de keyword completo o por partes (ver comentario)
-        /*
-        En esta implementación, se tiene en cuenta el keyword completo, por ejemplo si quiero buscar por "Susana Gimenez"
-        y el texto de la actualización tiene sólo "Susana", sólo "Gimenez" o no en el orden que está en el keyword no lo
-        tiene en cuenta.
-         */
     }
 }

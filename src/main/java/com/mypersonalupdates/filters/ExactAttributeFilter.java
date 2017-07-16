@@ -20,28 +20,19 @@ public class ExactAttributeFilter extends AttributeFilter{
 
     @Override
     public Collection<FilterValue> getValues(UpdatesProviderAttribute attr) {
-        Collection<FilterValue> values = new LinkedList<>();
-        values.add(new FilterValue(this.value, false));
-
-        return values;
-
-        /*
-        No entiendo por qué pasa un UpdatesProviderAttribute por paramentro
-        en la implementación pasada, tampoco lo usamos. A demás el padre lo tiene como atributo.
-        */
+        // TODO: implementar public boolean equals(UpdatesProviderAttribute other) en UpdatesProviderAttribute
+        if(this.attr.equals(attr)) {
+            Collection<FilterValue> values = new LinkedList<>();
+            values.add(new FilterValue(this.value, false));
+            return values;
+        }
+        return null;
     }
 
     @Override
     public boolean test(Update update) {
-        Collection<String> attributeValues = new LinkedList<>();
-        attributeValues.addAll(update.getAttributeValues(this.attr));
+        Collection<String> attributeValues = update.getAttributeValues(this.attr);
 
-        if (attributeValues != null)
-            for (String value : attributeValues) {
-                if (this.value.equals(value))
-                    return true;
-            }
-
-        return false;
+        return attributeValues == null ? null : attributeValues.contains(this.value);
     }
 }
