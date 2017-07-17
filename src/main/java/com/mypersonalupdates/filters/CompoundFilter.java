@@ -2,6 +2,9 @@ package com.mypersonalupdates.filters;
 
 
 import com.mypersonalupdates.Filter;
+import com.mypersonalupdates.db.DBConnection;
+import com.mypersonalupdates.db.DBException;
+import com.mypersonalupdates.db.actions.FilterActions;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
@@ -15,6 +18,60 @@ public abstract class CompoundFilter extends Filter {
         this.ID = ID;
         this.filter1 = filter1;
         this.filter2 = filter2;
+    }
+
+    //TODO: Agregar al diagrama de clases
+    protected static Integer create(Filter filter1, Filter filter2, String type) throws DBException {
+        Integer filterID;
+
+        try {
+            filterID = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(FilterActions.class).compoundFilterGetIDFromContent(
+                            filter1.getID(),
+                            filter2.getID()
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+
+        if (filterID != null) {
+            filterID = Filter.create("CompoundFilter");
+
+            int rowsAffected = 0;
+            final Integer fID = filterID;
+
+            if (filterID != null){
+                try {
+                    rowsAffected = DBConnection.getInstance().withHandle(
+                            handle -> handle.attach(FilterActions.class).createCompoundFilter(
+                                    fID,
+                                    filter1.getID(),
+                                    filter2.getID(),
+                                    type
+                            )
+                    );
+                } catch (Exception e) {
+                    throw new DBException(e);
+                }
+            }
+
+            if (rowsAffected <= 0){
+                try {
+                    DBConnection.getInstance().withHandle(
+                            handle -> handle.attach(FilterActions.class).compoundFilterDeleteByID(
+                                    fID
+                            )
+                    );
+                } catch (Exception e) {
+                    throw new DBException(e);
+                }
+
+                filterID = null;
+            }
+        }
+
+        return filterID;
     }
 
     @Override

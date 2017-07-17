@@ -1,6 +1,7 @@
 package com.mypersonalupdates.filters;
 
 import com.mypersonalupdates.Update;
+import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
 import java.util.Collection;
@@ -12,10 +13,16 @@ public class ExactAttributeFilter extends AttributeFilter{
         super(ID, attr, value);
     }
 
-    public ExactAttributeFilter create(UpdatesProviderAttribute attr, String value) {
-        //TODO: Hacer con base
-        System.err.println("ExactAttributeFilter no está implementado");
-        return null;
+    public ExactAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
+        Integer filterID = null;
+
+        try {
+            filterID = AttributeFilter.create(attr, value, "ExactAttributeFilter");
+        } catch (DBException e) {
+            throw new DBException(e);
+        }
+
+        return filterID == null ? null : new ExactAttributeFilter(filterID, attr, value);
     }
 
     @Override
@@ -33,6 +40,6 @@ public class ExactAttributeFilter extends AttributeFilter{
     public boolean test(Update update) {
         Collection<String> attributeValues = update.getAttributeValues(this.attr);
 
-        return attributeValues == null ? null : attributeValues.contains(this.value);
+        return attributeValues == null ? (this.value == null ? true : false) : attributeValues.contains(this.value);
     }
 }

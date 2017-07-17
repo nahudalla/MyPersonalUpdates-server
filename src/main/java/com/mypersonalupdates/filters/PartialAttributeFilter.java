@@ -1,6 +1,7 @@
 package com.mypersonalupdates.filters;
 
 import com.mypersonalupdates.Update;
+import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
 import java.util.Collection;
@@ -9,13 +10,19 @@ import java.util.LinkedList;
 public class PartialAttributeFilter extends AttributeFilter{
 
     private PartialAttributeFilter(Integer ID, UpdatesProviderAttribute attr, String value) {
-        super(ID, attr, value);
+        super(ID, attr, value.toLowerCase());
     }
 
-    public PartialAttributeFilter create(UpdatesProviderAttribute attr, String value) {
-        //TODO: Hacer con base
-        System.err.println("PartialAttributeFilter no está implementado");
-        return null;
+    public PartialAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
+        Integer filterID = null;
+
+        try {
+            filterID = AttributeFilter.create(attr, value, "PartialAttributeFilter");
+        } catch (DBException e) {
+            throw new DBException(e);
+        }
+
+        return filterID == null ? null : new PartialAttributeFilter(filterID, attr, value);
     }
 
     @Override
