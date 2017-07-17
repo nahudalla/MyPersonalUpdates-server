@@ -2,6 +2,9 @@ package com.mypersonalupdates.filters;
 
 import com.mypersonalupdates.Filter;
 import com.mypersonalupdates.Update;
+import com.mypersonalupdates.db.DBConnection;
+import com.mypersonalupdates.db.DBException;
+import com.mypersonalupdates.db.actions.FilterActions;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
@@ -16,9 +19,54 @@ public class NotFilter extends Filter{
         this.filter = filter;
     }
 
-    public static NotFilter create(Filter filter) {
-        //TODO: Hacer con la base
-        return null;
+    public static NotFilter create(Filter filter) throws DBException {
+        Integer filterID;
+
+        try {
+            filterID = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(FilterActions.class).notFilterGetIDFromContent(
+                            filter.getID()
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+
+        if (filterID == null) {
+            filterID = Filter.create("NotFilter");
+
+            int rowsAffected = 0;
+            final Integer fID = filterID;
+
+            if (filterID != null) {
+                try {
+                    rowsAffected = DBConnection.getInstance().withHandle(
+                            handle -> handle.attach(FilterActions.class).createNotFilter(
+                                    fID,
+                                    filter.getID()
+                            )
+                    );
+                } catch (Exception e) {
+                    throw new DBException(e);
+                }
+            }
+
+            if (rowsAffected <= 0) {
+                try {
+                    DBConnection.getInstance().withHandle(
+                            handle -> handle.attach(FilterActions.class).notFilterDeleteByID(
+                                    fID
+                            )
+                    );
+                } catch (Exception e) {
+                    throw new DBException(e);
+                }
+
+                filterID = null;
+            }
+        }
+
+        return filterID == null ? null : new NotFilter(filterID, filter);
     }
 
     @Override
@@ -27,7 +75,7 @@ public class NotFilter extends Filter{
     }
 
     @Override
-    public Collection<String> getValues(UpdatesProviderAttribute attr) {
+    public Collection<FilterValue> getValues(UpdatesProviderAttribute attr) {
         return null;
     }
 
