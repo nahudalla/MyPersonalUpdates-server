@@ -30,7 +30,8 @@ public abstract class AttributeFilter extends Filter{
         try {
             attrID = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdatesProviderAttributeActions.class).getIDFromContent(
-                            attr.getID()
+                            attr.getID(),
+                            type
                     )
             );
         } catch (Exception e) {
