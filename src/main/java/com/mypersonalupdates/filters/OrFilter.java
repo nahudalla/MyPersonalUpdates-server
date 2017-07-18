@@ -2,6 +2,7 @@ package com.mypersonalupdates.filters;
 
 import com.mypersonalupdates.Filter;
 import com.mypersonalupdates.Update;
+import com.mypersonalupdates.db.DBException;
 
 public class OrFilter extends CompoundFilter{
 
@@ -9,9 +10,10 @@ public class OrFilter extends CompoundFilter{
         super(ID, filter1, filter2);
     }
 
-    public AndFilter create(Filter filter1, Filter filter2) {
-        //TODO: Hace con la base
-        return null;
+    public OrFilter create(Filter filter1, Filter filter2) throws DBException {
+        Integer filterID;
+        filterID = CompoundFilter.create(filter1, filter2, "OrFilter");
+        return filterID == null ? null : new OrFilter(filterID, filter1, filter2);
     }
 
     @Override

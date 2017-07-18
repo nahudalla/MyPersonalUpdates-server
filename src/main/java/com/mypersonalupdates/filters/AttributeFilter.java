@@ -1,28 +1,80 @@
 package com.mypersonalupdates.filters;
 
 import com.mypersonalupdates.Filter;
-import com.mypersonalupdates.Update;
+import com.mypersonalupdates.db.DBConnection;
+import com.mypersonalupdates.db.DBException;
+import com.mypersonalupdates.db.actions.AttributeFilterActions;
+import com.mypersonalupdates.db.actions.UpdatesProviderAttributeActions;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class AttributeFilter extends Filter{
+public abstract class AttributeFilter extends Filter{
 
     private Integer ID;
-    private UpdatesProviderAttribute attr;
-    private String value;
+    protected UpdatesProviderAttribute attr;
+    protected String value;
 
-    private AttributeFilter(Integer ID, UpdatesProviderAttribute attr, String value) {
+    protected AttributeFilter(Integer ID, UpdatesProviderAttribute attr, String value) {
         this.ID = ID;
         this.attr = attr;
         this.value = value;
     }
 
-    public static AttributeFilter create(UpdatesProviderAttribute attr, String value) {
-        //TODO: hacer con la base
-        return null;
+    //TODO: Agregar al diagrama de clases
+    protected static Integer create(UpdatesProviderAttribute attr, String value, String type) throws DBException {
+        Integer attrID;
+
+        try {
+            attrID = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(UpdatesProviderAttributeActions.class).getIDFromContent(
+                            attr.getID(),
+                            type
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+
+        if (attrID != null) {
+            attrID = Filter.create("AttributeFilter");
+
+            int rowsAffected = 0;
+            final Integer aID = attrID;
+
+            if (attrID != null){
+                try {
+                    rowsAffected = DBConnection.getInstance().withHandle(
+                            handle -> handle.attach(AttributeFilterActions.class).create(
+                                    aID,
+                                    attr.getID(),
+                                    value,
+                                    type
+                            )
+                    );
+                } catch (Exception e) {
+                    throw new DBException(e);
+                }
+            }
+
+            if (rowsAffected <= 0){
+                try {
+                    DBConnection.getInstance().withHandle(
+                            handle -> handle.attach(AttributeFilterActions.class).remove(
+                                    aID
+                            )
+                    );
+                } catch (Exception e) {
+                    throw new DBException(e);
+                }
+
+                attrID = null;
+            }
+        }
+
+        return attrID;
     }
 
     @Override
@@ -34,25 +86,6 @@ public class AttributeFilter extends Filter{
         }
 
         return null;
-    }
-
-    @Override
-    public Collection<String> getValues(UpdatesProviderAttribute attr) {
-        Collection<String> values = new LinkedList<>();
-        values.add(this.value);
-        return values;
-    }
-
-    @Override
-    public boolean test(Update update) {
-        Collection<String> values = update.getAttributeValues(this.attr);
-        if (values != null)
-            for (String value : values) {
-                if (this.value.equals(value))
-                    return true;
-            }
-
-        return false;
     }
 
     @Override
