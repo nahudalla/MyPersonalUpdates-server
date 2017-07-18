@@ -3,7 +3,7 @@ package com.mypersonalupdates.filters;
 import com.mypersonalupdates.Filter;
 import com.mypersonalupdates.db.DBConnection;
 import com.mypersonalupdates.db.DBException;
-import com.mypersonalupdates.db.actions.FilterActions;
+import com.mypersonalupdates.db.actions.AttributeFilterActions;
 import com.mypersonalupdates.db.actions.UpdatesProviderAttributeActions;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
@@ -25,11 +25,11 @@ public abstract class AttributeFilter extends Filter{
 
     //TODO: Agregar al diagrama de clases
     protected static Integer create(UpdatesProviderAttribute attr, String value, String type) throws DBException {
-        Integer filterID;
+        Integer attrID;
 
         try {
-            filterID = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(UpdatesProviderAttributeActions.class).attributeFilterGetIDFromContent(
+            attrID = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(UpdatesProviderAttributeActions.class).getIDFromContent(
                             attr.getID()
                     )
             );
@@ -37,17 +37,17 @@ public abstract class AttributeFilter extends Filter{
             throw new DBException(e);
         }
 
-        if (filterID != null) {
-            filterID = Filter.create("AttributeFilter");
+        if (attrID != null) {
+            attrID = Filter.create("AttributeFilter");
 
             int rowsAffected = 0;
-            final Integer fID = filterID;
+            final Integer aID = attrID;
 
-            if (filterID != null){
+            if (attrID != null){
                 try {
                     rowsAffected = DBConnection.getInstance().withHandle(
-                            handle -> handle.attach(FilterActions.class).createAttributeFilter(
-                                    fID,
+                            handle -> handle.attach(AttributeFilterActions.class).create(
+                                    aID,
                                     attr.getID(),
                                     value,
                                     type
@@ -61,19 +61,19 @@ public abstract class AttributeFilter extends Filter{
             if (rowsAffected <= 0){
                 try {
                     DBConnection.getInstance().withHandle(
-                            handle -> handle.attach(FilterActions.class).compoundAttributeDeleteByID(
-                                    fID
+                            handle -> handle.attach(AttributeFilterActions.class).remove(
+                                    aID
                             )
                     );
                 } catch (Exception e) {
                     throw new DBException(e);
                 }
 
-                filterID = null;
+                attrID = null;
             }
         }
 
-        return filterID;
+        return attrID;
     }
 
     @Override

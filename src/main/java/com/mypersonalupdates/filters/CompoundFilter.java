@@ -4,7 +4,7 @@ package com.mypersonalupdates.filters;
 import com.mypersonalupdates.Filter;
 import com.mypersonalupdates.db.DBConnection;
 import com.mypersonalupdates.db.DBException;
-import com.mypersonalupdates.db.actions.FilterActions;
+import com.mypersonalupdates.db.actions.CompoundFilterActions;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
@@ -26,9 +26,10 @@ public abstract class CompoundFilter extends Filter {
 
         try {
             filterID = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(FilterActions.class).compoundFilterGetIDFromContent(
+                    handle -> handle.attach(CompoundFilterActions.class).getIDFromContent(
                             filter1.getID(),
-                            filter2.getID()
+                            filter2.getID(),
+                            type
                     )
             );
         } catch (Exception e) {
@@ -44,7 +45,7 @@ public abstract class CompoundFilter extends Filter {
             if (filterID != null){
                 try {
                     rowsAffected = DBConnection.getInstance().withHandle(
-                            handle -> handle.attach(FilterActions.class).createCompoundFilter(
+                            handle -> handle.attach(CompoundFilterActions.class).create(
                                     fID,
                                     filter1.getID(),
                                     filter2.getID(),
@@ -59,7 +60,7 @@ public abstract class CompoundFilter extends Filter {
             if (rowsAffected <= 0){
                 try {
                     DBConnection.getInstance().withHandle(
-                            handle -> handle.attach(FilterActions.class).compoundFilterDeleteByID(
+                            handle -> handle.attach(CompoundFilterActions.class).remove(
                                     fID
                             )
                     );

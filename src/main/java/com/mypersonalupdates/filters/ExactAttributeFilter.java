@@ -14,14 +14,8 @@ public class ExactAttributeFilter extends AttributeFilter{
     }
 
     public ExactAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
-        Integer filterID = null;
-
-        try {
-            filterID = AttributeFilter.create(attr, value, "ExactAttributeFilter");
-        } catch (DBException e) {
-            throw new DBException(e);
-        }
-
+        Integer filterID;
+        filterID = AttributeFilter.create(attr, value, "ExactAttributeFilter");
         return filterID == null ? null : new ExactAttributeFilter(filterID, attr, value);
     }
 
@@ -40,6 +34,6 @@ public class ExactAttributeFilter extends AttributeFilter{
     public boolean test(Update update) {
         Collection<String> attributeValues = update.getAttributeValues(this.attr);
 
-        return attributeValues == null ? (this.value == null ? true : false) : attributeValues.contains(this.value);
+        return attributeValues == null ? (this.value == null) : attributeValues.contains(this.value);
     }
 }

@@ -4,7 +4,7 @@ import com.mypersonalupdates.Filter;
 import com.mypersonalupdates.Update;
 import com.mypersonalupdates.db.DBConnection;
 import com.mypersonalupdates.db.DBException;
-import com.mypersonalupdates.db.actions.FilterActions;
+import com.mypersonalupdates.db.actions.NotFilterActions;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
@@ -24,7 +24,7 @@ public class NotFilter extends Filter{
 
         try {
             filterID = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(FilterActions.class).notFilterGetIDFromContent(
+                    handle -> handle.attach(NotFilterActions.class).getIDFromContent(
                             filter.getID()
                     )
             );
@@ -41,7 +41,7 @@ public class NotFilter extends Filter{
             if (filterID != null) {
                 try {
                     rowsAffected = DBConnection.getInstance().withHandle(
-                            handle -> handle.attach(FilterActions.class).createNotFilter(
+                            handle -> handle.attach(NotFilterActions.class).create(
                                     fID,
                                     filter.getID()
                             )
@@ -54,7 +54,7 @@ public class NotFilter extends Filter{
             if (rowsAffected <= 0) {
                 try {
                     DBConnection.getInstance().withHandle(
-                            handle -> handle.attach(FilterActions.class).notFilterDeleteByID(
+                            handle -> handle.attach(NotFilterActions.class).remove(
                                     fID
                             )
                     );

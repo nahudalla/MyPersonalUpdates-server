@@ -12,8 +12,8 @@ import java.util.Collection;
 
 public abstract class Filter {
 
-    public boolean remove(Integer ID) {
-        int rowsAffected = 0;
+    public boolean remove(Integer ID) throws DBException {
+        int rowsAffected;
 
         try {
             rowsAffected = DBConnection.getInstance().withHandle(
@@ -22,14 +22,10 @@ public abstract class Filter {
                     )
             );
         } catch (Exception e) {
-            try {
                 throw new DBException(e);
-            } catch (DBException e1) {
-                e1.printStackTrace();
             }
-        }
 
-        return rowsAffected == 0 ? false : true;
+        return rowsAffected != 0;
     }
 
     //TODO: Agregar en el diagrama de clases

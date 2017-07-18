@@ -14,14 +14,8 @@ public class PartialAttributeFilter extends AttributeFilter{
     }
 
     public PartialAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
-        Integer filterID = null;
-
-        try {
-            filterID = AttributeFilter.create(attr, value, "PartialAttributeFilter");
-        } catch (DBException e) {
-            throw new DBException(e);
-        }
-
+        Integer filterID;
+        filterID = AttributeFilter.create(attr, value, "PartialAttributeFilter");
         return filterID == null ? null : new PartialAttributeFilter(filterID, attr, value);
     }
 

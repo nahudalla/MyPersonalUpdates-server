@@ -11,18 +11,8 @@ public class AndFilter extends CompoundFilter{
    }
 
    public static AndFilter create(Filter filter1, Filter filter2) throws DBException {
-       Integer filterID = null;
-
-       try {
-           filterID = CompoundFilter.create(filter1, filter2, "AndFilter");
-       } catch (DBException e) {
-           try {
-               throw new DBException(e);
-           } catch (DBException e1) {
-               throw new DBException(e);
-           }
-       }
-
+       Integer filterID;
+       filterID = CompoundFilter.create(filter1, filter2, "AndFilter");
        return filterID == null ? null : new AndFilter(filterID, filter1, filter2);
    }
 
