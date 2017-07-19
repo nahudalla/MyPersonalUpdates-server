@@ -13,19 +13,27 @@ public interface AttributeFilterActions {
             @Bind("type") String type
     );
 
-    @SqlQuery("REMOVE FROM attribute_filter WHERE ID = :ID LIMIT 1")
-    Integer remove(
-            @Bind("ID") Integer ID
-    );
-
     @SqlQuery("SELECT type FROM attribute_filter WHERE filterID = :ID")
     String getTypeFromID(
             @Bind("ID") Integer ID
     );
 
-    @SqlQuery("SELECT ID FROM attribute_filter WHERE attrID = :attrID AND fieldValue = VALUE LIMIT 1")
+    @SqlQuery("SELECT ID FROM attribute_filter WHERE attrID = :attrID AND fieldValue = :value AND type = :type LIMIT 1")
     Integer getIDFromContent(
             @Bind("attrID") Integer attrID,
-            @Bind("value") String value
+            @Bind("value") String value,
+            @Bind("value") String type
+    );
+
+    @SqlQuery("SELECT attrID FROM attribute_filter WHERE ID = :ID AND type = :type")
+    Integer getAttrIDFromKeys(
+      @Bind("ID") Integer ID,
+      @Bind("value") String type
+    );
+
+    @SqlQuery("SELECT fieldValue FROM attribute_filter WHERE ID = :ID AND type = :type")
+    String getFieldValueDFromKeys(
+      @Bind("ID") Integer ID,
+      @Bind("value") String type
     );
 }

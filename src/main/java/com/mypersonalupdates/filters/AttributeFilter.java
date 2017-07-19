@@ -12,6 +12,9 @@ import java.util.LinkedList;
 
 public abstract class AttributeFilter extends Filter{
 
+    static final String exact = "ExactAttributeFilter";
+    static final String parcial = "ParcialAttributeFilter";
+
     private Integer ID;
     protected UpdatesProviderAttribute attr;
     protected String value;
@@ -23,6 +26,55 @@ public abstract class AttributeFilter extends Filter{
     }
 
     //TODO: Agregar al diagrama de clases
+    public static AttributeFilter create(Integer ID) throws DBException {
+        Integer attrID;
+        String fieldValue, type;
+
+        try {
+            type = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(AttributeFilterActions.class).getTypeFromID(
+                            ID
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+
+
+        try {
+            attrID = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(AttributeFilterActions.class).getAttrIDFromKeys(
+                            ID,
+                            type
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+
+        try {
+            fieldValue = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(AttributeFilterActions.class).getFieldValueDFromKeys(
+                            ID,
+                            type
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+
+        // TODO: Implementar en UpdatesProviderAttribute create
+
+        if (type.equals(exact))
+            return ExactAttributeFilter.create(ID, UpdatesProviderAttribute.create(attrID), fieldValue);
+
+        if (type.equals(parcial))
+            return PartialAttributeFilter.create(ID, UpdatesProviderAttribute.create(attrID), fieldValue);
+
+        return null;
+    }
+
+    //TODO: Agregar al diagrama de clases
     protected static Integer create(UpdatesProviderAttribute attr, String value, String type) throws DBException {
         Integer attrID;
 
@@ -30,7 +82,8 @@ public abstract class AttributeFilter extends Filter{
             attrID = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(AttributeFilterActions.class).getIDFromContent(
                             attr.getID(),
-                            value
+                            value,
+                            type
                     )
             );
         } catch (Exception e) {

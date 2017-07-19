@@ -9,13 +9,19 @@ import java.util.LinkedList;
 
 public class ExactAttributeFilter extends AttributeFilter{
 
+    public static String type = "ExactAttributeFilter";
+
+    public static ExactAttributeFilter create(Integer ID, UpdatesProviderAttribute attr, String value) {
+        return new ExactAttributeFilter(ID, attr, value);
+    }
+
     private ExactAttributeFilter(Integer ID, UpdatesProviderAttribute attr, String value) {
         super(ID, attr, value);
     }
 
     public ExactAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
         Integer filterID;
-        filterID = AttributeFilter.create(attr, value, "ExactAttributeFilter");
+        filterID = AttributeFilter.create(attr, value, type);
         return filterID == null ? null : new ExactAttributeFilter(filterID, attr, value);
     }
 
