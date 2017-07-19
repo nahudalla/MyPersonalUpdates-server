@@ -2,10 +2,11 @@ package com.mypersonalupdates;
 
 import com.mypersonalupdates.db.DBConnection;
 import com.mypersonalupdates.db.DBException;
-import com.mypersonalupdates.db.actions.AttributeFilterActions;
-import com.mypersonalupdates.db.actions.CompoundFilterActions;
 import com.mypersonalupdates.db.actions.FilterActions;
-import com.mypersonalupdates.filters.*;
+import com.mypersonalupdates.filters.AttributeFilter;
+import com.mypersonalupdates.filters.CompoundFilter;
+import com.mypersonalupdates.filters.FilterValue;
+import com.mypersonalupdates.filters.NotFilter;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
@@ -56,47 +57,11 @@ public abstract class Filter {
         if (typeFilter.equals("NotFilter"))
             return NotFilter.create(ID);
 
-        if (typeFilter.equals("CompoundFilter")){
-            String typeCompound;
-            try {
-                typeCompound = DBConnection.getInstance().withHandle(
-                        handle -> handle.attach(CompoundFilterActions.class).getTypeFromID(
-                                ID
-                        )
-                );
-            } catch (Exception e) {
-                throw new DBException(e);
-            }
+        if (typeFilter.equals("CompoundFilter"))
+            return CompoundFilter.create(ID);
 
-            if (typeCompound.equals("AndFilter"))
-                return AndFilter.create(ID);
-
-            else if (typeCompound.equals("OrFilter"))
-                return OrFilter.create(ID);
-
-            return null;
-        }
-
-        if (typeFilter.equals("AttributeFilter")){
-            String typeAttribute;
-            try {
-                typeAttribute = DBConnection.getInstance().withHandle(
-                        handle -> handle.attach(AttributeFilterActions.class).getTypeFromID(
-                                ID
-                        )
-                );
-            } catch (Exception e) {
-                throw new DBException(e);
-            }
-
-            if (typeAttribute.equals("ExactAttributeFilter"))
-                return ExactAttributeFilter.create(ID);
-
-            else if (typeAttribute.equals("PartialAttributeFilter"))
-                return PartialAttributeFilter.create(ID);
-
-            return null;
-        }
+        if (typeFilter.equals("AttributeFilter"))
+            return AttributeFilter.create(ID);
 
         return null;
     }
