@@ -43,9 +43,9 @@ public abstract class Filter {
 
     //TODO: Agregar en el diagrama de clases
     public static Filter create (Integer ID) throws DBException {
-        String typeFilter;
+        String filterType;
         try {
-            typeFilter = DBConnection.getInstance().withHandle(
+            filterType = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(FilterActions.class).getTypeFromID(
                             ID
                     )
@@ -54,13 +54,16 @@ public abstract class Filter {
             throw new DBException(e);
         }
 
-        if (typeFilter.equals("NotFilter"))
+        if (filterType == null)
+            return null;
+
+        if (filterType.equals(NotFilter.DATABASE_TYPE))
             return NotFilter.create(ID);
 
-        if (typeFilter.equals("CompoundFilter"))
+        if (filterType.equals(CompoundFilter.DATABASE_TYPE))
             return CompoundFilter.create(ID);
 
-        if (typeFilter.equals("AttributeFilter"))
+        if (filterType.equals(AttributeFilter.DATABASE_TYPE))
             return AttributeFilter.create(ID);
 
         return null;
