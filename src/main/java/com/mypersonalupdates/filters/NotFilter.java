@@ -19,6 +19,7 @@ public class NotFilter extends Filter{
         this.filter = filter;
     }
 
+    //TODO: agregar al diagrama de clases
     public static NotFilter create(Integer filterID) throws DBException {
         Integer notFilterID;
 
