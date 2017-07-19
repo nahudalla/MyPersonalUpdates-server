@@ -20,4 +20,9 @@ public interface NotFilterActions {
     Integer remove(
             @Bind("filterID") Integer filterID
     );
+
+    @SqlQuery("SELECT type FROM not_filter WHERE filterID = :ID")
+    String getTypeFromID(
+            @Bind("ID") Integer ID
+    );
 }

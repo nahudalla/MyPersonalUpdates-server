@@ -4,7 +4,6 @@ import com.mypersonalupdates.Filter;
 import com.mypersonalupdates.db.DBConnection;
 import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.db.actions.AttributeFilterActions;
-import com.mypersonalupdates.db.actions.UpdatesProviderAttributeActions;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
@@ -29,19 +28,21 @@ public abstract class AttributeFilter extends Filter{
 
         try {
             attrID = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(UpdatesProviderAttributeActions.class).getIDFromContent(
+                    handle -> handle.attach(AttributeFilterActions.class).getIDFromContent(
                             attr.getID(),
-                            type
+                            value
                     )
             );
         } catch (Exception e) {
             throw new DBException(e);
         }
 
-        if (attrID != null) {
+        boolean okCreate = true;
+
+        if (attrID == null) {
             attrID = Filter.create("AttributeFilter");
 
-            int rowsAffected = 0;
+            int rowsAffected;
             final Integer aID = attrID;
 
             if (attrID != null){
@@ -57,23 +58,13 @@ public abstract class AttributeFilter extends Filter{
                 } catch (Exception e) {
                     throw new DBException(e);
                 }
-            }
 
-            if (rowsAffected <= 0){
-                try {
-                    DBConnection.getInstance().withHandle(
-                            handle -> handle.attach(AttributeFilterActions.class).remove(
-                                    aID
-                            )
-                    );
-                } catch (Exception e) {
-                    throw new DBException(e);
+                if(rowsAffected <= 0) {
+                    Filter.removeFilterByID(attrID);
+                    attrID = null;
                 }
-
-                attrID = null;
             }
         }
-
         return attrID;
     }
 

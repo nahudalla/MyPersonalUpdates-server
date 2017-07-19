@@ -36,7 +36,9 @@ public abstract class CompoundFilter extends Filter {
             throw new DBException(e);
         }
 
-        if (filterID != null) {
+        boolean okCreate = true;
+
+        if (filterID == null) {
             filterID = Filter.create("CompoundFilter");
 
             int rowsAffected = 0;
@@ -57,17 +59,8 @@ public abstract class CompoundFilter extends Filter {
                 }
             }
 
-            if (rowsAffected <= 0){
-                try {
-                    DBConnection.getInstance().withHandle(
-                            handle -> handle.attach(CompoundFilterActions.class).remove(
-                                    fID
-                            )
-                    );
-                } catch (Exception e) {
-                    throw new DBException(e);
-                }
-
+            if(rowsAffected <= 0) {
+                Filter.removeFilterByID(filterID);
                 filterID = null;
             }
         }

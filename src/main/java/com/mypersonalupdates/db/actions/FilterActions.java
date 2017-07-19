@@ -19,4 +19,9 @@ public interface FilterActions {
             @Bind("ID") Integer ID
     );
 
+    @SqlQuery("SELECT type FROM filter WHERE ID = :ID")
+    String getTypeFromID(
+            @Bind("ID") Integer ID
+    );
+
 }
