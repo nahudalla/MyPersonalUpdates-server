@@ -121,14 +121,13 @@ public abstract class AttributeFilter extends Filter{
                                     type
                             )
                     );
+                    if(rowsAffected <= 0) {
+                        Filter.removeFilterByID(attrID);
+                        attrID = null;
+                    }
                 } catch (Exception e) {
                     throw new DBException(e);
                 }
-            }
-
-            if(rowsAffected <= 0) {
-                Filter.removeFilterByID(attrID);
-                attrID = null;
             }
         }
         return attrID;
