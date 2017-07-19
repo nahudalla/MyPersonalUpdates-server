@@ -9,11 +9,11 @@ public class AndFilter extends CompoundFilter{
     static final String DATABASE_TYPE = "AndFilter";
 
    public static AndFilter create(Integer ID) throws DBException {
-       Filter  filterID1 = CompoundFilter.getFilter1FromID(ID),
-               filterID2 = CompoundFilter.getFilter2FromID(ID);
+       Filter  filter1 = CompoundFilter.getFilter1FromID(ID),
+               filter2 = CompoundFilter.getFilter2FromID(ID);
 
-       if (filterID1 != null && filterID2 != null)
-           return new AndFilter(ID, filterID1, filterID2);
+       if (filter1 != null && filter2 != null)
+           return new AndFilter(ID, filter1, filter2);
 
        return null;
    }
