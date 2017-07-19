@@ -21,6 +21,29 @@ public abstract class CompoundFilter extends Filter {
     }
 
     //TODO: Agregar al diagrama de clases
+    public static CompoundFilter create(Integer ID) throws DBException {
+        String typeCompound;
+
+        try {
+            typeCompound = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(CompoundFilterActions.class).getTypeFromID(
+                            ID
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+
+        if (typeCompound.equals("AndFilter"))
+            return AndFilter.create(ID);
+
+        else if (typeCompound.equals("OrFilter"))
+            return OrFilter.create(ID);
+
+        return null;
+    }
+
+    //TODO: Agregar al diagrama de clases
     protected static Integer create(Filter filter1, Filter filter2, String type) throws DBException {
         Integer filterID;
 

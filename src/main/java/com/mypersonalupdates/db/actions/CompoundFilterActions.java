@@ -21,13 +21,20 @@ public interface CompoundFilterActions {
             @Bind("type") String type
     );
 
-    @SqlQuery("REMOVE ID FROM compound_filter WHERE filterID = :filterID LIMIT 1")
-    Integer remove(
-            @Bind("filterID") Integer filterID
-    );
-
-    @SqlQuery("SELECT type FROM compound_filter WHERE filterID = :ID")
+    @SqlQuery("SELECT type FROM compound_filter WHERE ID = :ID")
     String getTypeFromID(
             @Bind("ID") Integer ID
+    );
+
+    @SqlQuery("SELECT filterID1 FROM compound_filter WHERE ID = :ID AND type = :type")
+    Integer getFilterID1FromKeys(
+            @Bind("ID") Integer ID,
+            @Bind("type") String  type
+    );
+
+    @SqlQuery("SELECT filterID1 FROM compound_filter WHERE ID = :ID AND type = :type")
+    Integer getFilterID2FromKeys(
+            @Bind("ID") Integer ID,
+            @Bind("type") String  type
     );
 }
