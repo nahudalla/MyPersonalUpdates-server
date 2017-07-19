@@ -26,7 +26,7 @@ public abstract class CompoundFilter extends Filter {
     protected static Filter getFilter1FromID(Integer ID) throws DBException {
         try {
             Integer id = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(CompoundFilterActions.class).getFilterID1FromKeys(
+                    handle -> handle.attach(CompoundFilterActions.class).getFilterID1FromID(
                             ID
                     )
             );
@@ -42,7 +42,7 @@ public abstract class CompoundFilter extends Filter {
     protected static Filter getFilter2FromID(Integer ID) throws DBException {
         try {
             Integer id = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(CompoundFilterActions.class).getFilterID2FromKeys(
+                    handle -> handle.attach(CompoundFilterActions.class).getFilterID2FromID(
                             ID
                     )
             );
@@ -93,8 +93,6 @@ public abstract class CompoundFilter extends Filter {
             throw new DBException(e);
         }
 
-        boolean okCreate = true;
-
         if (filterID == null) {
             filterID = Filter.create(DATABASE_TYPE);
 
@@ -111,14 +109,14 @@ public abstract class CompoundFilter extends Filter {
                                     type
                             )
                     );
+                    
+                    if(rowsAffected <= 0) {
+                        Filter.removeFilterByID(filterID);
+                        filterID = null;
+                    }
                 } catch (Exception e) {
                     throw new DBException(e);
                 }
-            }
-
-            if(rowsAffected <= 0) {
-                Filter.removeFilterByID(filterID);
-                filterID = null;
             }
         }
 
