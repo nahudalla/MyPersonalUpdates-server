@@ -21,7 +21,7 @@ public interface CompoundFilterActions {
             @Bind("type") String type
     );
 
-    @SqlQuery("REMOVE ID FROM compound_filter WHERE filterID = :filterID LIMIT 1")
+    @SqlQuery("REMOVE FROM compound_filter WHERE filterID = :filterID LIMIT 1")
     Integer remove(
             @Bind("filterID") Integer filterID
     );
