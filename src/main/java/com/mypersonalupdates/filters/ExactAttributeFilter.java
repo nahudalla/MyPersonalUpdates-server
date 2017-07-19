@@ -19,7 +19,10 @@ public class ExactAttributeFilter extends AttributeFilter{
         String fieldValue = AttributeFilter.getValueFromID(ID);
         UpdatesProviderAttribute attr = AttributeFilter.getAttributeFromID(ID);
 
-        return new ExactAttributeFilter(ID, attr, fieldValue);
+        if(fieldValue != null && attr != null)
+            return new ExactAttributeFilter(ID, attr, fieldValue);
+        
+        return null;
     }
 
 
