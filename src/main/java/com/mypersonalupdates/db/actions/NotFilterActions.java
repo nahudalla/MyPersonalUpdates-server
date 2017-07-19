@@ -15,14 +15,4 @@ public interface NotFilterActions {
     Integer getIDFromContent(
             @Bind("filterID") Integer filterID
     );
-
-    @SqlQuery("REMOVE FROM not_filter WHERE filterID = :filterID LIMIT 1")
-    Integer remove(
-            @Bind("filterID") Integer filterID
-    );
-
-    @SqlQuery("SELECT type FROM not_filter WHERE filterID = :ID")
-    String getTypeFromID(
-            @Bind("ID") Integer ID
-    );
 }

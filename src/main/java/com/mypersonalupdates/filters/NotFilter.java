@@ -19,6 +19,22 @@ public class NotFilter extends Filter{
         this.filter = filter;
     }
 
+    public static NotFilter create(Integer filterID) throws DBException {
+        Integer notFilterID;
+
+        try {
+            notFilterID = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(NotFilterActions.class).getIDFromContent(
+                            filterID
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+
+        return notFilterID == null ? null : new NotFilter(notFilterID, Filter.create(filterID));
+    }
+
     public static NotFilter create(Filter filter) throws DBException {
         Integer filterID;
 
