@@ -13,7 +13,7 @@ public interface AttributeFilterActions {
             @Bind("type") String type
     );
 
-    @SqlQuery("SELECT type FROM attribute_filter WHERE filterID = :ID")
+    @SqlQuery("SELECT type FROM attribute_filter WHERE ID = :ID")
     String getTypeFromID(
             @Bind("ID") Integer ID
     );
@@ -31,9 +31,8 @@ public interface AttributeFilterActions {
       @Bind("value") String type
     );
 
-    @SqlQuery("SELECT fieldValue FROM attribute_filter WHERE ID = :ID AND type = :type")
-    String getFieldValueDFromKeys(
-      @Bind("ID") Integer ID,
-      @Bind("value") String type
+    @SqlQuery("SELECT fieldValue FROM attribute_filter WHERE ID = :ID")
+    String getFieldValueFromKeys(
+      @Bind("ID") Integer ID
     );
 }

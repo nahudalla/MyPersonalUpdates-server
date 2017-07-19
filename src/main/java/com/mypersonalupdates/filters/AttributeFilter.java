@@ -55,9 +55,8 @@ public abstract class AttributeFilter extends Filter{
 
         try {
             fieldValue = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(AttributeFilterActions.class).getFieldValueDFromKeys(
-                            ID,
-                            type
+                    handle -> handle.attach(AttributeFilterActions.class).getFieldValueFromKeys(
+                            ID
                     )
             );
         } catch (Exception e) {
