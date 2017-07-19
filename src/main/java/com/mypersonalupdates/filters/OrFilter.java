@@ -10,11 +10,11 @@ public class OrFilter extends CompoundFilter{
 
     //TODO: Agregar al diagrama de clases
     public static OrFilter create(Integer ID) throws DBException {
-        Filter  filterID1 = CompoundFilter.getFilter1FromID(ID),
-                filterID2 = CompoundFilter.getFilter2FromID(ID);
+        Filter  filter1 = CompoundFilter.getFilter1FromID(ID),
+                filter2 = CompoundFilter.getFilter2FromID(ID);
 
-        if (filterID1 != null && filterID2 != null)
-            return new OrFilter(ID, filterID1, filterID2);
+        if (filter1 != null && filter2 != null)
+            return new OrFilter(ID, filter1, filter2);
 
         return null;
     }
