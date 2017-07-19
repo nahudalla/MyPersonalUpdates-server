@@ -14,7 +14,7 @@ public class NotFilter extends Filter{
     private Integer ID;
     private Filter filter;
 
-    static final String type = "NotFilter";
+    static final String DATABASE_TYPE = "NotFilter";
 
     private NotFilter(Integer ID, Filter filter) {
         this.ID = ID;
@@ -54,7 +54,7 @@ public class NotFilter extends Filter{
         boolean okCreate = true;
 
         if (filterID == null) {
-            filterID = Filter.create(type);
+            filterID = Filter.create(DATABASE_TYPE);
 
             int rowsAffected = 0;
             final Integer fID = filterID;

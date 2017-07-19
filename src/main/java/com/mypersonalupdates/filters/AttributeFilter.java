@@ -12,6 +12,7 @@ import java.util.LinkedList;
 
 public abstract class AttributeFilter extends Filter{
 
+    static final String DATABASE_TYPE = "AttributeFilter";
     static final String exact = "ExactAttributeFilter";
     static final String parcial = "ParcialAttributeFilter";
 
@@ -93,7 +94,7 @@ public abstract class AttributeFilter extends Filter{
         boolean okCreate = true;
 
         if (attrID == null) {
-            attrID = Filter.create("AttributeFilter");
+            attrID = Filter.create(DATABASE_TYPE);
 
             int rowsAffected;
             final Integer aID = attrID;

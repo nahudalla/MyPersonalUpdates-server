@@ -14,6 +14,8 @@ public abstract class CompoundFilter extends Filter {
     protected Integer ID;
     protected Filter filter1, filter2;
 
+    final static String DATABASE_TYPE = "CompoundFilter";
+
     protected CompoundFilter(Integer ID, Filter filter1, Filter filter2) {
         this.ID = ID;
         this.filter1 = filter1;
@@ -62,7 +64,7 @@ public abstract class CompoundFilter extends Filter {
         boolean okCreate = true;
 
         if (filterID == null) {
-            filterID = Filter.create("CompoundFilter");
+            filterID = Filter.create(DATABASE_TYPE);
 
             int rowsAffected = 0;
             final Integer fID = filterID;
