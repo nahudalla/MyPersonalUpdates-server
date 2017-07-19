@@ -27,12 +27,12 @@ public interface CompoundFilterActions {
     );
 
     @SqlQuery("SELECT filterID1 FROM compound_filter WHERE ID = :ID")
-    Integer getFilterID1FromKeys(
+    Integer getFilterID1FromID(
             @Bind("ID") Integer ID
     );
 
     @SqlQuery("SELECT filterID2 FROM compound_filter WHERE ID = :ID")
-    Integer getFilterID2FromKeys(
+    Integer getFilterID2FromID(
             @Bind("ID") Integer ID
     );
 }
