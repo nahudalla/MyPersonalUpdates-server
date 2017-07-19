@@ -22,7 +22,7 @@ public interface AttributeFilterActions {
     Integer getIDFromContent(
             @Bind("attrID") Integer attrID,
             @Bind("value") String value,
-            @Bind("value") String type
+            @Bind("TYPE") String type
     );
 
     @SqlQuery("SELECT attrID FROM attribute_filter WHERE ID = :ID")
