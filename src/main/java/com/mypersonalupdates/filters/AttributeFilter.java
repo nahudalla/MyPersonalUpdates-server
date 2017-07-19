@@ -13,8 +13,6 @@ import java.util.LinkedList;
 public abstract class AttributeFilter extends Filter{
 
     public static final String DATABASE_TYPE = "AttributeFilter";
-    static final String exact = "ExactAttributeFilter";
-    static final String parcial = "ParcialAttributeFilter";
 
     private Integer ID;
     protected UpdatesProviderAttribute attr;
@@ -27,49 +25,66 @@ public abstract class AttributeFilter extends Filter{
     }
 
     //TODO: Agregar al diagrama de clases
-    public static AttributeFilter create(Integer ID) throws DBException {
+    protected static UpdatesProviderAttribute getAttributeFromID(Integer id) throws DBException {
         Integer attrID;
-        String fieldValue, type;
+
+        try {
+            attrID = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(AttributeFilterActions.class).getAttrIDFromID(
+                            id
+                    )
+            );
+            return attrID == null ? null : UpdatesProviderAttribute.create(attrID);
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+    }
+
+    //TODO: Agregar al diagrama de clases
+    protected static String getValueFromID(Integer id) throws DBException {
+        String fieldValue;
+
+        try {
+            fieldValue = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(AttributeFilterActions.class).getFieldValueFromID(
+                            id
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+
+        return fieldValue;
+    }
+
+    //TODO: Agregar al diagrama de clases
+    private static String getTypeFromID(Integer id) throws DBException {
+        String type;
 
         try {
             type = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(AttributeFilterActions.class).getTypeFromID(
-                            ID
+                            id
                     )
             );
         } catch (Exception e) {
             throw new DBException(e);
         }
 
+        return type;
+    }
 
-        try {
-            attrID = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(AttributeFilterActions.class).getAttrIDFromKeys(
-                            ID,
-                            type
-                    )
-            );
-        } catch (Exception e) {
-            throw new DBException(e);
-        }
-
-        try {
-            fieldValue = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(AttributeFilterActions.class).getFieldValueFromKeys(
-                            ID
-                    )
-            );
-        } catch (Exception e) {
-            throw new DBException(e);
-        }
+    //TODO: Agregar al diagrama de clases
+    public static AttributeFilter create(Integer ID) throws DBException {
+        String type = AttributeFilter.getTypeFromID(ID);
 
         // TODO: Implementar en UpdatesProviderAttribute create
 
-        if (type.equals(exact))
-            return ExactAttributeFilter.create(ID, UpdatesProviderAttribute.create(attrID), fieldValue);
+        if (type.equals(ExactAttributeFilter.DATABASE_TYPE))
+            return ExactAttributeFilter.create(ID);
 
-        if (type.equals(parcial))
-            return PartialAttributeFilter.create(ID, UpdatesProviderAttribute.create(attrID), fieldValue);
+        if (type.equals(PartialAttributeFilter.DATABASE_TYPE))
+            return PartialAttributeFilter.create(ID);
 
         return null;
     }
@@ -90,12 +105,10 @@ public abstract class AttributeFilter extends Filter{
             throw new DBException(e);
         }
 
-        boolean okCreate = true;
-
         if (attrID == null) {
             attrID = Filter.create(DATABASE_TYPE);
 
-            int rowsAffected;
+            int rowsAffected = 0;
             final Integer aID = attrID;
 
             if (attrID != null){
@@ -111,11 +124,11 @@ public abstract class AttributeFilter extends Filter{
                 } catch (Exception e) {
                     throw new DBException(e);
                 }
+            }
 
-                if(rowsAffected <= 0) {
-                    Filter.removeFilterByID(attrID);
-                    attrID = null;
-                }
+            if(rowsAffected <= 0) {
+                Filter.removeFilterByID(attrID);
+                attrID = null;
             }
         }
         return attrID;

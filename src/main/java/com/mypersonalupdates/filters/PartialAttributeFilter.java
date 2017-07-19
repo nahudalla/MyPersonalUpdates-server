@@ -9,10 +9,17 @@ import java.util.LinkedList;
 
 public class PartialAttributeFilter extends AttributeFilter{
 
-    public static String type = "PartialtAttributeFilter";
+    public static String DATABASE_TYPE = "PartialtAttributeFilter";
 
     public static PartialAttributeFilter create(Integer ID, UpdatesProviderAttribute attr, String value) {
         return new PartialAttributeFilter(ID, attr, value);
+    }
+
+    public static PartialAttributeFilter create(Integer ID) throws DBException {
+        String fieldValue = AttributeFilter.getValueFromID(ID);
+        UpdatesProviderAttribute attr = AttributeFilter.getAttributeFromID(ID);
+
+        return new PartialAttributeFilter(ID, attr, fieldValue);
     }
 
     private PartialAttributeFilter(Integer ID, UpdatesProviderAttribute attr, String value) {
@@ -21,7 +28,7 @@ public class PartialAttributeFilter extends AttributeFilter{
 
     public PartialAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
         Integer filterID;
-        filterID = AttributeFilter.create(attr, value, type);
+        filterID = AttributeFilter.create(attr, value, DATABASE_TYPE);
         return filterID == null ? null : new PartialAttributeFilter(filterID, attr, value);
     }
 

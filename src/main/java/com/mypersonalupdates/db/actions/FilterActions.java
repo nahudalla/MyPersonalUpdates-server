@@ -8,10 +8,10 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
 public interface FilterActions {
 
-    @SqlUpdate("INSERT INTO filter (type) VALUES (:type)")
+    @SqlUpdate("INSERT INTO filter (TYPE) VALUES (:TYPE)")
     @GetGeneratedKeys
     Integer create(
-            @Bind("type") String type
+            @Bind("TYPE") String type
     );
 
     @SqlQuery("REMOVE FROM filter WHERE ID = :ID LIMIT 1")
@@ -19,7 +19,7 @@ public interface FilterActions {
             @Bind("ID") Integer ID
     );
 
-    @SqlQuery("SELECT type FROM filter WHERE ID = :ID")
+    @SqlQuery("SELECT TYPE FROM filter WHERE ID = :ID")
     String getTypeFromID(
             @Bind("ID") Integer ID
     );

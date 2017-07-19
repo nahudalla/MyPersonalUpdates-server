@@ -23,6 +23,38 @@ public abstract class CompoundFilter extends Filter {
     }
 
     //TODO: Agregar al diagrama de clases
+    protected static Filter getFilter1FromID(Integer ID) throws DBException {
+        try {
+            Integer id = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(CompoundFilterActions.class).getFilterID1FromKeys(
+                            ID
+                    )
+            );
+
+            return id == null ? null : Filter.create(id);
+
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+    }
+
+    //TODO: Agregar al diagrama de clases
+    protected static Filter getFilter2FromID(Integer ID) throws DBException {
+        try {
+            Integer id = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(CompoundFilterActions.class).getFilterID2FromKeys(
+                            ID
+                    )
+            );
+
+            return id == null ? null : Filter.create(id);
+
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+    }
+
+    //TODO: Agregar al diagrama de clases
     public static CompoundFilter create(Integer ID) throws DBException {
         String typeCompound;
 
@@ -36,10 +68,10 @@ public abstract class CompoundFilter extends Filter {
             throw new DBException(e);
         }
 
-        if (typeCompound.equals("AndFilter"))
+        if (typeCompound.equals(AndFilter.DATABASE_TYPE))
             return AndFilter.create(ID);
 
-        else if (typeCompound.equals("OrFilter"))
+        else if (typeCompound.equals(OrFilter.DATABASE_TYPE))
             return OrFilter.create(ID);
 
         return null;
