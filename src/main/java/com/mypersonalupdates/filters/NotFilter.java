@@ -14,6 +14,8 @@ public class NotFilter extends Filter{
     private Integer ID;
     private Filter filter;
 
+    static final String type = "NotFilter";
+
     private NotFilter(Integer ID, Filter filter) {
         this.ID = ID;
         this.filter = filter;
@@ -52,7 +54,7 @@ public class NotFilter extends Filter{
         boolean okCreate = true;
 
         if (filterID == null) {
-            filterID = Filter.create("NotFilter");
+            filterID = Filter.create(type);
 
             int rowsAffected = 0;
             final Integer fID = filterID;
