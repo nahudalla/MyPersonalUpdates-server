@@ -14,7 +14,7 @@ public class NotFilter extends Filter{
     private Integer ID;
     private Filter filter;
 
-    static final String DATABASE_TYPE = "NotFilter";
+    public static final String DATABASE_TYPE = "NotFilter";
 
     private NotFilter(Integer ID, Filter filter) {
         this.ID = ID;

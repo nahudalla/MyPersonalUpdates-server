@@ -14,7 +14,7 @@ public abstract class CompoundFilter extends Filter {
     protected Integer ID;
     protected Filter filter1, filter2;
 
-    final static String DATABASE_TYPE = "CompoundFilter";
+    public final static String DATABASE_TYPE = "CompoundFilter";
 
     protected CompoundFilter(Integer ID, Filter filter1, Filter filter2) {
         this.ID = ID;

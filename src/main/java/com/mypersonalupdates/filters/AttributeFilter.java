@@ -12,7 +12,7 @@ import java.util.LinkedList;
 
 public abstract class AttributeFilter extends Filter{
 
-    static final String DATABASE_TYPE = "AttributeFilter";
+    public static final String DATABASE_TYPE = "AttributeFilter";
     static final String exact = "ExactAttributeFilter";
     static final String parcial = "ParcialAttributeFilter";
 
