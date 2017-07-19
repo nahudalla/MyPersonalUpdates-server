@@ -3,22 +3,25 @@ package com.mypersonalupdates.log;
 import java.util.Date;
 
 public class Restrictions {
-    // TODO: usar Integer
-    private int limit;
-    private Date startTimestamp, endTimestamp;
-    private boolean order;
-    // TODO: agregar fromID
 
-    // TODO: rehacer segun diagrama
-    public Restrictions(int limit, Date startTimestamp, Date endTimestamp, boolean order) {
+    private Integer limit, fromID;
+    private Date startTimestamp, endTimestamp;
+    boolean order;
+
+    public Restrictions(Integer limit, Integer fromID, Date startTimestamp, Date endTimestamp, boolean order){
         this.limit = limit;
+        this.fromID = fromID;
         this.startTimestamp = startTimestamp;
-        this.endTimestamp = endTimestamp;
+        this.endTimestamp = startTimestamp;
         this.order = order;
     }
 
     public Integer getLimit() {
         return this.limit;
+    }
+
+    public Integer getFromID() {
+        return this.fromID;
     }
 
     public Date getStartTimestamp() {
@@ -29,10 +32,7 @@ public class Restrictions {
         return this.endTimestamp;
     }
 
-    // TODO: arreglar Boolean->boolean en diagrama
-    public boolean getOrder() {
+    public boolean isOrder() {
         return this.order;
     }
-
-    // TODO: agregar getFromID
 }
