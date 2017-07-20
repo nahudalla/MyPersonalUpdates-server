@@ -6,9 +6,9 @@ public class Restrictions {
 
     private Integer limit, fromID;
     private Date startTimestamp, endTimestamp;
-    boolean order;
+    private boolean order;
 
-    public Restrictions(Integer limit, Integer fromID, Date startTimestamp, Date endTimestamp, boolean order){
+    public Restrictions(Integer fromID, Date startTimestamp, Date endTimestamp, boolean order, Integer limit){
         this.limit = limit;
         this.fromID = fromID;
         this.startTimestamp = startTimestamp;
@@ -16,12 +16,12 @@ public class Restrictions {
         this.order = order;
     }
 
-    public Integer getLimit() {
-        return this.limit;
-    }
-
     public Integer getFromID() {
         return this.fromID;
+    }
+
+    public Integer getLimit() {
+        return this.limit;
     }
 
     public Date getStartTimestamp() {
@@ -32,7 +32,7 @@ public class Restrictions {
         return this.endTimestamp;
     }
 
-    public boolean isOrder() {
+    public boolean getOrder() {
         return this.order;
     }
 }
