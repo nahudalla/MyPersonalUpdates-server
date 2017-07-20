@@ -1,10 +1,13 @@
 package com.mypersonalupdates.db.actions;
 
+import com.mypersonalupdates.db.mappers.ExistsMapper;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 public interface CategoryActions {
 
@@ -21,7 +24,7 @@ public interface CategoryActions {
             @Bind("name") String name
     );
 
-    @SqlQuery("REMOVE FROM category WHERE userID = :userID AND name = :name")
+    @SqlUpdate("DELETE FROM category WHERE userID = :userID AND name = :name")
     int remove(
             @Bind("userID") Integer userID,
             @Bind("name") String name
@@ -48,16 +51,24 @@ public interface CategoryActions {
             @Bind("providerID") Integer providerID
     );
 
-    @SqlQuery("REMOVE FROM category_provider WHERE userID = :userID AND name = :name AND providerID = :providerID")
+    @SqlUpdate("DELETE FROM category_provider WHERE userID = :userID AND name = :name AND providerID = :providerID")
     int removeProvider(
             @Bind("userID") Integer userID,
             @Bind("name") String name,
             @Bind("providerID") Integer providerID
     );
 
-    @SqlQuery("SELECT filterID FROM category_provider WHERE userID = :userID AND name = :name")
-    Collection<Integer> getProvidersFromKeys(
+    @SqlQuery("SELECT providerID FROM category_provider WHERE userID = :userID AND name = :name")
+    Iterator<Integer> getProvidersFromKeys(
             @Bind("userID") Integer userID,
             @Bind("name") String name
+    );
+
+    @SqlQuery("SELECT userID FROM category_provider WHERE userID = :userID AND name = :name AND providerID = :providerID")
+    @RegisterMapper(ExistsMapper.class)
+    boolean isProviderAssociated(
+            @Bind("userID") Integer userID,
+            @Bind("name") String name,
+            @Bind("providerID") Integer providerID
     );
 }
