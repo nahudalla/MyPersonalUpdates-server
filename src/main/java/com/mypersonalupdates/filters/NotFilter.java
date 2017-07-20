@@ -52,9 +52,9 @@ public class NotFilter extends Filter{
         }
 
         if (filterID == null) {
-            filterID = Filter.create(DATABASE_TYPE);
+            filterID = Filter.create(NotFilter.DATABASE_TYPE);
 
-            int rowsAffected = 0;
+            int rowsAffected;
             final Integer fID = filterID;
 
             if (filterID != null) {
@@ -80,7 +80,7 @@ public class NotFilter extends Filter{
     }
 
     @Override
-    public Collection<UpdatesProviderAttribute> getAttributtes(UpdatesProvider provider) {
+    public Collection<UpdatesProviderAttribute> getAttributes(UpdatesProvider provider) {
         return null;
     }
 

@@ -69,7 +69,7 @@ public abstract class Filter {
         return null;
     }
 
-    public abstract Collection<UpdatesProviderAttribute> getAttributtes(UpdatesProvider provider);
+    public abstract Collection<UpdatesProviderAttribute> getAttributes(UpdatesProvider provider);
 
     public abstract Collection<FilterValue> getValues(UpdatesProviderAttribute attr);
 
