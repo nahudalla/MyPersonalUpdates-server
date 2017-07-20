@@ -34,11 +34,11 @@ public interface CategoryActions {
             @Bind("newName") String newName
     );
 
-    @SqlUpdate("UPDATE category SET filterID  = :newFilter WHERE userID = :userID AND name = :name")
+    @SqlUpdate("UPDATE category SET filterID  = :newFilterID WHERE userID = :userID AND name = :name")
     int setFilter(
             @Bind("userID") Integer userID,
             @Bind("name") String name,
-            @Bind("newFilter") Integer newFilter
+            @Bind("newFilterID") Integer newFilterID
     );
 
     @SqlUpdate("INSERT INTO category_provider (userID, name, providerID) VALUES (:userID, :name, :providerID)")

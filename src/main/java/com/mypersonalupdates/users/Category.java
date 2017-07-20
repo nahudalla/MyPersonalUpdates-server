@@ -19,28 +19,11 @@ public class Category {
         this.name = name;
     }
 
-    //TODO: Agregar al diagrama de clases
-    private static Integer getFilterIDFromKeys(Integer userID, String name) throws DBException {
-        Integer FilterID;
-        try {
-            FilterID = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(CategoryActions.class).getFilterIDFromKeys(
-                            userID,
-                            name
-                    )
-            );
-        } catch (Exception e) {
-            throw new DBException(e);
-        }
-
-        return FilterID;
-    }
-
     public static Category create(User user, String name, Filter filter) throws DBException {
 
-        Integer IDFilters = Category.getFilterIDFromKeys(user.getID(), name);
+        Integer filterID = Category.getFilterIDFromKeys(user.getID(), name);
 
-        if (IDFilters == null || !IDFilters.equals(filter.getID())) {
+        if (filterID == null || !filterID.equals(filter.getID())) {
             int rowsAffected;
             try {
                 rowsAffected = DBConnection.getInstance().withHandle(
@@ -62,12 +45,12 @@ public class Category {
     }
 
     public static Category create(User user, String name) throws DBException {
-        Integer IDFilters = Category.getFilterIDFromKeys(user.getID(), name);
-        return (IDFilters == null) ? null : new Category(user, name);
+        Integer filterID = Category.getFilterIDFromKeys(user.getID(), name);
+        return (filterID == null) ? null : new Category(user, name);
     }
 
     public boolean remove() throws DBException {
-        int rowsAffected = 0;
+        int rowsAffected;
 
         try {
             rowsAffected = DBConnection.getInstance().withHandle(
@@ -116,7 +99,8 @@ public class Category {
     }
 
     public Filter getFilter() throws DBException {
-        Integer filterID = null;
+        Integer filterID;
+
         try {
             filterID = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(CategoryActions.class).getFilterIDFromKeys(
@@ -128,14 +112,12 @@ public class Category {
             throw new DBException(e);
         }
 
-        if (filterID != null)
-            return Filter.create(filterID);
-
-        return null;
+        return (filterID == null) ? null : Filter.create(filterID);
     }
 
     public boolean setName(String name) throws DBException {
-        int rowsAffected = 0;
+        int rowsAffected;
+
         try {
             rowsAffected = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(CategoryActions.class).setName(
@@ -148,16 +130,12 @@ public class Category {
             throw new DBException(e);
         }
 
-        if (rowsAffected > 0) {
-            this.name = name;
-            return true;
-        }
-
-        return false;
+        return rowsAffected > 0;
     }
 
     public boolean setFilter(Filter filter) throws DBException {
-        int rowsAffected = 0;
+        int rowsAffected;
+
         try {
             rowsAffected = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(CategoryActions.class).setFilter(
@@ -174,7 +152,8 @@ public class Category {
     }
 
     public boolean addProvider(UpdatesProvider provider) throws DBException {
-        int rowsAffected = 0;
+        int rowsAffected;
+
         try {
             rowsAffected = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(CategoryActions.class).addProvider(
@@ -191,7 +170,8 @@ public class Category {
     }
 
     public boolean removeProvider(UpdatesProvider provider) throws DBException {
-        int rowsAffected = 0;
+        int rowsAffected;
+
         try {
             rowsAffected = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(CategoryActions.class).removeProvider(
@@ -205,6 +185,23 @@ public class Category {
         }
 
         return rowsAffected > 0;
+    }
+
+    //TODO: Agregar al diagrama de clases
+    private static Integer getFilterIDFromKeys(Integer userID, String name) throws DBException {
+        Integer FilterID;
+        try {
+            FilterID = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(CategoryActions.class).getFilterIDFromKeys(
+                            userID,
+                            name
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+
+        return FilterID;
     }
 
 }
