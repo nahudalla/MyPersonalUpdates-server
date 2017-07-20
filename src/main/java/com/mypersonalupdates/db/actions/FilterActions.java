@@ -14,7 +14,7 @@ public interface FilterActions {
             @Bind("TYPE") String type
     );
 
-    @SqlQuery("REMOVE FROM filter WHERE ID = :ID LIMIT 1")
+    @SqlUpdate("DELETE FROM filter WHERE ID = :ID LIMIT 1")
     Integer remove(
             @Bind("ID") Integer ID
     );
