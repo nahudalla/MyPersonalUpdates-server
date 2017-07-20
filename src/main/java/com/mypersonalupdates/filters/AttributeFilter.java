@@ -26,15 +26,12 @@ public abstract class AttributeFilter extends Filter{
 
     //TODO: Agregar al diagrama de clases
     protected static UpdatesProviderAttribute getAttributeFromID(Integer id) throws DBException {
-        Integer attrID;
-
         try {
-            attrID = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(AttributeFilterActions.class).getAttrIDFromID(
+            return DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(AttributeFilterActions.class).getAttrFromID(
                             id
                     )
             );
-            return attrID == null ? null : UpdatesProviderAttribute.create(attrID);
         } catch (Exception e) {
             throw new DBException(e);
         }
@@ -42,10 +39,8 @@ public abstract class AttributeFilter extends Filter{
 
     //TODO: Agregar al diagrama de clases
     protected static String getValueFromID(Integer id) throws DBException {
-        String fieldValue;
-
         try {
-            fieldValue = DBConnection.getInstance().withHandle(
+            return DBConnection.getInstance().withHandle(
                     handle -> handle.attach(AttributeFilterActions.class).getFieldValueFromID(
                             id
                     )
@@ -53,16 +48,12 @@ public abstract class AttributeFilter extends Filter{
         } catch (Exception e) {
             throw new DBException(e);
         }
-
-        return fieldValue;
     }
 
     //TODO: Agregar al diagrama de clases
     private static String getTypeFromID(Integer id) throws DBException {
-        String type;
-
         try {
-            type = DBConnection.getInstance().withHandle(
+            return DBConnection.getInstance().withHandle(
                     handle -> handle.attach(AttributeFilterActions.class).getTypeFromID(
                             id
                     )
@@ -70,8 +61,6 @@ public abstract class AttributeFilter extends Filter{
         } catch (Exception e) {
             throw new DBException(e);
         }
-
-        return type;
     }
 
     //TODO: Agregar al diagrama de clases
@@ -79,6 +68,9 @@ public abstract class AttributeFilter extends Filter{
         String type = AttributeFilter.getTypeFromID(ID);
 
         // TODO: Implementar en UpdatesProviderAttribute create
+
+        if(type == null)
+            return null;
 
         if (type.equals(ExactAttributeFilter.DATABASE_TYPE))
             return ExactAttributeFilter.create(ID);
@@ -91,12 +83,13 @@ public abstract class AttributeFilter extends Filter{
 
     //TODO: Agregar al diagrama de clases
     protected static Integer create(UpdatesProviderAttribute attr, String value, String type) throws DBException {
-        Integer attrID;
+        Integer filterID;
 
         try {
-            attrID = DBConnection.getInstance().withHandle(
+            filterID = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(AttributeFilterActions.class).getIDFromContent(
-                            attr.getID(),
+                            attr.getProvider().getID(),
+                            attr.getAttrID(),
                             value,
                             type
                     )
@@ -105,36 +98,34 @@ public abstract class AttributeFilter extends Filter{
             throw new DBException(e);
         }
 
-        if (attrID == null) {
-            attrID = Filter.create(DATABASE_TYPE);
+        if (filterID == null) {
+            filterID = Filter.create(AttributeFilter.DATABASE_TYPE);
 
-            int rowsAffected = 0;
-            final Integer aID = attrID;
-
-            if (attrID != null){
+            if (filterID != null){
                 try {
-                    rowsAffected = DBConnection.getInstance().withHandle(
+                    Integer finalFilterID = filterID;
+                    int rowsAffected = DBConnection.getInstance().withHandle(
                             handle -> handle.attach(AttributeFilterActions.class).create(
-                                    aID,
-                                    attr.getID(),
+                                    finalFilterID,
+                                    attr.getAttrID(),
                                     value,
                                     type
                             )
                     );
                     if(rowsAffected <= 0) {
-                        Filter.removeFilterByID(attrID);
-                        attrID = null;
+                        Filter.removeFilterByID(filterID);
+                        filterID = null;
                     }
                 } catch (Exception e) {
                     throw new DBException(e);
                 }
             }
         }
-        return attrID;
+        return filterID;
     }
 
     @Override
-    public Collection<UpdatesProviderAttribute> getAttributtes(UpdatesProvider provider) {
+    public Collection<UpdatesProviderAttribute> getAttributes(UpdatesProvider provider) {
         if (this.attr.getProvider().equals(provider)) {
             Collection<UpdatesProviderAttribute> attributes = new LinkedList<>();
             attributes.add(this.attr);

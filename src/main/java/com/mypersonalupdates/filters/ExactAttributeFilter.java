@@ -9,13 +9,9 @@ import java.util.LinkedList;
 
 public class ExactAttributeFilter extends AttributeFilter{
 
-    public static String DATABASE_TYPE = "ExactAttributeFilter";
+    public static final String DATABASE_TYPE = "ExactAttributeFilter";
 
-    public static ExactAttributeFilter create(Integer ID, UpdatesProviderAttribute attr, String value) {
-        return new ExactAttributeFilter(ID, attr, value);
-    }
-
-    static ExactAttributeFilter create(Integer ID) throws DBException {
+    public static ExactAttributeFilter create(Integer ID) throws DBException {
         String fieldValue = AttributeFilter.getValueFromID(ID);
         UpdatesProviderAttribute attr = AttributeFilter.getAttributeFromID(ID);
 
@@ -25,14 +21,13 @@ public class ExactAttributeFilter extends AttributeFilter{
         return null;
     }
 
-
     private ExactAttributeFilter(Integer ID, UpdatesProviderAttribute attr, String value) {
         super(ID, attr, value);
     }
 
     public ExactAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
         Integer filterID;
-        filterID = AttributeFilter.create(attr, value, DATABASE_TYPE);
+        filterID = AttributeFilter.create(attr, value, ExactAttributeFilter.DATABASE_TYPE);
         return filterID == null ? null : new ExactAttributeFilter(filterID, attr, value);
     }
 

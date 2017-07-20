@@ -25,7 +25,7 @@ public class OrFilter extends CompoundFilter{
 
     public OrFilter create(Filter filter1, Filter filter2) throws DBException {
         Integer filterID;
-        filterID = CompoundFilter.create(filter1, filter2, DATABASE_TYPE);
+        filterID = CompoundFilter.create(filter1, filter2, NotFilter.DATABASE_TYPE);
         return filterID == null ? null : new OrFilter(filterID, filter1, filter2);
     }
 

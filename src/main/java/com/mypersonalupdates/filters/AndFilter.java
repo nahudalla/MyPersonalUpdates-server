@@ -24,7 +24,7 @@ public class AndFilter extends CompoundFilter{
 
    public static AndFilter create(Filter filter1, Filter filter2) throws DBException {
        Integer filterID;
-       filterID = CompoundFilter.create(filter1, filter2, DATABASE_TYPE);
+       filterID = CompoundFilter.create(filter1, filter2, AndFilter.DATABASE_TYPE);
        return filterID == null ? null : new AndFilter(filterID, filter1, filter2);
    }
 

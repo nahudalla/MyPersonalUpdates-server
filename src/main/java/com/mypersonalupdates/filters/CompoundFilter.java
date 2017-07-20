@@ -68,6 +68,9 @@ public abstract class CompoundFilter extends Filter {
             throw new DBException(e);
         }
 
+        if(typeCompound == null)
+            return null;
+
         if (typeCompound.equals(AndFilter.DATABASE_TYPE))
             return AndFilter.create(ID);
 
@@ -94,7 +97,7 @@ public abstract class CompoundFilter extends Filter {
         }
 
         if (filterID == null) {
-            filterID = Filter.create(DATABASE_TYPE);
+            filterID = Filter.create(CompoundFilter.DATABASE_TYPE);
 
             int rowsAffected = 0;
             final Integer fID = filterID;
@@ -124,11 +127,11 @@ public abstract class CompoundFilter extends Filter {
     }
 
     @Override
-    public Collection<UpdatesProviderAttribute> getAttributtes(UpdatesProvider provider) {
+    public Collection<UpdatesProviderAttribute> getAttributes(UpdatesProvider provider) {
         Collection<UpdatesProviderAttribute> attributesF1, attributesF2;
 
-        attributesF1 = this.filter1.getAttributtes(provider);
-        attributesF2 = this.filter2.getAttributtes(provider);
+        attributesF1 = this.filter1.getAttributes(provider);
+        attributesF2 = this.filter2.getAttributes(provider);
 
         if (attributesF1 != null && attributesF2 != null ) {
             attributesF1.addAll(attributesF2);
