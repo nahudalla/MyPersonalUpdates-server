@@ -5,7 +5,7 @@ import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
 public interface AttributeFilterActions {
     @SqlUpdate("INSERT INTO attribute_filter (ID, providerID, attrID, fieldValue, TYPE) VALUES (:ID, :providerID, :attrID, :fieldValue, :TYPE)")
@@ -31,7 +31,7 @@ public interface AttributeFilterActions {
     );
 
     @SqlQuery("SELECT providerID, attrID FROM attribute_filter WHERE ID = :ID")
-    @RegisterMapper(UpdatesProviderAttributeMapper.class)
+    @Mapper(UpdatesProviderAttributeMapper.class)
     UpdatesProviderAttribute getAttrFromID(
       @Bind("ID") Integer ID
     );
