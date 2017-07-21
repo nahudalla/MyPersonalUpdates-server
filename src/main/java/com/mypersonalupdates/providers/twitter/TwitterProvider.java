@@ -1,59 +1,105 @@
 package com.mypersonalupdates.providers.twitter;
 
+import com.mypersonalupdates.Config;
 import com.mypersonalupdates.Filter;
-import com.mypersonalupdates.Update;
 import com.mypersonalupdates.UpdatesConsumer;
+import com.mypersonalupdates.UpdatesProvidersManager;
+import com.mypersonalupdates.db.DBConnection;
 import com.mypersonalupdates.db.DBException;
+import com.mypersonalupdates.db.actions.UpdatesProviderActions;
 import com.mypersonalupdates.providers.UpdatesProvider;
+import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 import com.mypersonalupdates.users.User;
-import com.sun.istack.internal.NotNull;
 
-import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Collection;
+import java.util.Hashtable;
 
 public class TwitterProvider implements UpdatesProvider {
-    public static void main(String []args) {
+    private static final int PROVIDER_ID = Config.get().getInt("providers.twitter.databaseProviderID");
 
-        TwitterProvider provider = new TwitterProvider();
+    static {
+        UpdatesProvidersManager.getInstance().addProvider(new TwitterProvider());
+    }
 
-        User user = null;
-        try {
-            user = User.fromUsername("nahuel");
-        } catch (DBException e) {
-            System.err.println("Could not obtain user from database.");
-        }
+    private final UpdatesProviderActions dbActions;
 
-        provider.subscribe(user, new Filter(), update -> {
-            if(update.isOwnUpdate())
-                System.out.println("@" + update.getSource()+": "+update.getText());
-            else {
-                Update original = update.getOriginalUpdate();
-                System.out.println("@" + update.getSource() + " retweeted @" + original.getSource() + ": " + original.getText());
-            }
-        });
+    private TwitterProvider() {
+        this.dbActions = DBConnection.getInstance().onDemand(UpdatesProviderActions.class);
+    }
+
+    public static TwitterProvider getInstance() {
+        return (TwitterProvider) UpdatesProvidersManager.getInstance().getProvider(TwitterProvider.PROVIDER_ID);
     }
 
     private final Hashtable<Integer, TwitterStream> streams = new Hashtable<>();
 
-    // TODO: get provider ID from somewhere? (UpdatesProviderManager.getNewProviderId()?)
-    // TODO: fix diagram
-    public Integer getID() {return 0;}
-
-    public List<String> getAcceptedFilterFields() {
-        // TODO: return accepted fields
-        System.err.println("TwitterProvider.getAcceptedFilterFields() not implemented.");
-        return null;
+    // TODO: arreglar diagrama
+    @Override
+    public Integer getID() {
+        return TwitterProvider.PROVIDER_ID;
     }
 
-    public Integer subscribe(User user, Filter filter, UpdatesConsumer consumer) {
-        // TODO: update diagram
-        TwitterStream stream = this.streams.computeIfAbsent(user.getId(), k -> new TwitterStream(user));
+    @Override
+    public String getName() {
+        return this.dbActions.getName(this.getID());
+    }
+
+    @Override
+    public String getDescription() {
+        return this.dbActions.getDescription(this.getID());
+    }
+
+    @Override
+    public Collection<UpdatesProviderAttribute> getAttributes() {
+        return this.dbActions.getAttributes(this.getID());
+    }
+
+    @Override
+    // TODO: actualizar signature en diagrama
+    public Long subscribe(User user, Filter filter, UpdatesConsumer consumer) {
+        TwitterStream stream;
+
+        synchronized (this.streams) {
+            stream = this.streams.get(user.getID());
+            if(stream == null) {
+                try {
+                    stream = new TwitterStream(this, user);
+                } catch (DBException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+
+                this.streams.put(user.getID(), stream);
+            }
+        }
 
         return stream.subscribe(filter, consumer);
     }
 
-    public boolean unsubscribe(User user, Integer subscriberID) {
-        TwitterStream stream = this.streams.get(user.getId());
+    @Override
+    public boolean unsubscribe(User user, Long subscriberID) {
+        TwitterStream stream;
+
+        synchronized (this.streams) {
+            stream = this.streams.get(user.getID());
+        }
+
         return stream != null && stream.unsubscribe(subscriberID);
+    }
+
+    @Override
+    public void stop() {
+        synchronized (this.streams) {
+            for (TwitterStream stream : this.streams.values())
+                stream.stop();
+
+            this.streams.clear();
+        }
+    }
+
+    @Override
+    // TODO: agregar a UpdatesProvider
+    public boolean equals(Object o) {
+        return this == o || (o instanceof TwitterProvider);
     }
 }
