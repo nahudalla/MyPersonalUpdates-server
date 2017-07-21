@@ -20,12 +20,12 @@ public class LogUpdate implements Update{
 
     public static LogUpdate create(Integer ID) throws DBException {
         try {
-            Integer auxID = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(UpdateActions.class).getIDFromID(
+            boolean exists = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(UpdateActions.class).exists(
                             ID)
             );
 
-            return (auxID == null) ? null : new LogUpdate(ID);
+            return exists ? null : new LogUpdate(ID);
 
         } catch (Exception e) {
             throw new DBException(e);
@@ -34,7 +34,7 @@ public class LogUpdate implements Update{
 
     public static LogUpdate create(Update update) throws DBException {
         Integer providerID = update.getProvider().getID();
-        String IDFRomProvider = update.getIDFromProvider(providerID);
+        String IDFRomProvider = update.getIDFromProvider();
 
         Integer ID = LogUpdate.getIDFromProviderData(providerID, IDFRomProvider);
 
@@ -45,7 +45,7 @@ public class LogUpdate implements Update{
                         handle -> handle.attach(UpdateActions.class).create(
                                 providerID,
                                 IDFRomProvider,
-                                update.getTimestamps()
+                                update.getTimestamp()
                         )
                 );
             } catch (Exception e) {
@@ -56,7 +56,6 @@ public class LogUpdate implements Update{
         return (ID == null) ? null : new LogUpdate(ID);
     }
 
-    //TODO: Agregar en el diagrama de clases
     private static Integer getIDFromProviderData(Integer providerID, String IDFromProvider) throws DBException {
         Integer ID;
 
@@ -91,7 +90,7 @@ public class LogUpdate implements Update{
     }
 
     @Override
-    public Date getTimestamps() throws DBException {
+    public Date getTimestamp() throws DBException {
         try {
             return DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdateActions.class).getTimestamp(
@@ -107,7 +106,7 @@ public class LogUpdate implements Update{
     @Override
     public Collection<String> getAttributeValues(UpdatesProviderAttribute attr) throws DBException {
         try {
-            Collection<String> attributeValues = DBConnection.getInstance().withHandle(
+            return  DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdateActions.class).getAttributeValues(
                             this.ID,
                             attr.getProvider().getID(),
@@ -115,15 +114,13 @@ public class LogUpdate implements Update{
                     )
             );
 
-            return (attributeValues.size() != 0) ? attributeValues : null;
-
         } catch (Exception e) {
             throw new DBException(e);
         }
     }
 
     @Override
-    public String getIDFromProvider(Integer providerID) throws DBException {
+    public String getIDFromProvider() throws DBException {
         try {
             return DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdateActions.class).getIDFromProvider(

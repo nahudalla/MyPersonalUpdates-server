@@ -12,7 +12,7 @@ public class Restrictions {
         this.limit = limit;
         this.fromID = fromID;
         this.startTimestamp = startTimestamp;
-        this.endTimestamp = startTimestamp;
+        this.endTimestamp = endTimestamp;
         this.order = order;
     }
 

@@ -9,7 +9,7 @@ import java.util.Date;
 
 public interface Update {
     UpdatesProvider getProvider() throws DBException;
-    Date getTimestamps() throws DBException;
+    Date getTimestamp() throws DBException;
     Collection<String> getAttributeValues(UpdatesProviderAttribute attr) throws DBException;
-    String getIDFromProvider(Integer providerID) throws DBException;
+    String getIDFromProvider() throws DBException;
 }

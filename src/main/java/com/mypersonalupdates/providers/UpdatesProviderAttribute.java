@@ -8,16 +8,16 @@ public class UpdatesProviderAttribute {
 
     private Integer attrID;
     private UpdatesProvider provider;
-    private boolean multi;
+    private Boolean multi;
 
-    private UpdatesProviderAttribute(Integer attrID, UpdatesProvider provider, boolean multi) {
+    private UpdatesProviderAttribute(UpdatesProvider provider, Integer attrID, Boolean multi) {
         this.attrID = attrID;
         this.provider = provider;
         this.multi = multi;
     }
 
     public static UpdatesProviderAttribute create(UpdatesProvider provider, Integer attrID) throws DBException {
-        boolean multi;
+        Boolean multi;
 
         try {
             multi = DBConnection.getInstance().withHandle(
@@ -30,7 +30,7 @@ public class UpdatesProviderAttribute {
             throw new DBException(e);
         }
 
-        return new UpdatesProviderAttribute(attrID, provider, multi);
+        return (multi == null) ? null : new UpdatesProviderAttribute(provider, attrID, multi);
     }
 
     public Integer getAttrID() {
@@ -73,8 +73,8 @@ public class UpdatesProviderAttribute {
         try {
             return DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdatesProviderAttributeActions.class).getFilterNotes(
-                            attrID,
-                            provider.getID()
+                            this.attrID,
+                            this.provider.getID()
                     )
             );
         } catch (Exception e) {
