@@ -1,5 +1,6 @@
 package com.mypersonalupdates.db;
 
+import com.mypersonalupdates.Config;
 import org.mariadb.jdbc.MySQLDataSource;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
@@ -7,9 +8,9 @@ import org.skife.jdbi.v2.Handle;
 import javax.sql.DataSource;
 
 public class DBConnection {
-    private static String DATABASE_URL = "jdbc:mysql://localhost:3306/mypersonalupdates";
-    private static String DATABASE_USER = "mypersonalupdatesuser";
-    private static String DATABASE_PASSWORD = "58fa510222a612101bf6e36a9ae696b987d876b75";
+    private static String DATABASE_URL = Config.get().getString("db.url");
+    private static String DATABASE_USER = Config.get().getString("db.user");
+    private static String DATABASE_PASSWORD = Config.get().getString("db.password");
 
     private static DataSource getDataSource() {
         MySQLDataSource mysqlDS = new MySQLDataSource();
@@ -29,6 +30,10 @@ public class DBConnection {
 
     private DBConnection() {
         this.dbi = new DBI(DBConnection.getDataSource());
+    }
+
+    public <T> T onDemand(Class<T> objType) {
+        return this.dbi.onDemand(objType);
     }
 
     public <T> T withHandle(HandleCallback<T> handleCallback) throws Exception {
