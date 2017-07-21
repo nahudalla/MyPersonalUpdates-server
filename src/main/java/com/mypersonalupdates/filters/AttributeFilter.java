@@ -107,6 +107,7 @@ public abstract class AttributeFilter extends Filter{
                     int rowsAffected = DBConnection.getInstance().withHandle(
                             handle -> handle.attach(AttributeFilterActions.class).create(
                                     finalFilterID,
+                                    attr.getProvider().getID(),
                                     attr.getAttrID(),
                                     value,
                                     type
