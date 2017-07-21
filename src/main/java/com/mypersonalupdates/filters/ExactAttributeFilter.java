@@ -25,7 +25,7 @@ public class ExactAttributeFilter extends AttributeFilter{
         super(ID, attr, value);
     }
 
-    public ExactAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
+    public static ExactAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
         Integer filterID;
         filterID = AttributeFilter.create(attr, value, ExactAttributeFilter.DATABASE_TYPE);
         return filterID == null ? null : new ExactAttributeFilter(filterID, attr, value);
