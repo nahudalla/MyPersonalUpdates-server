@@ -1,5 +1,6 @@
 package com.mypersonalupdates;
 
+import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
@@ -7,9 +8,8 @@ import java.util.Collection;
 import java.util.Date;
 
 public interface Update {
-
-    // TODO: arreglar nombre
-    Date getTimestamps();
-    Collection<String> getAttributeValues(UpdatesProviderAttribute attr);
-    UpdatesProvider getProvider();
+    UpdatesProvider getProvider() throws DBException;
+    Date getTimestamps() throws DBException;
+    Collection<String> getAttributeValues(UpdatesProviderAttribute attr) throws DBException;
+    String getIDFromProvider(Integer providerID) throws DBException;
 }
