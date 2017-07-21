@@ -1,42 +1,68 @@
 package com.mypersonalupdates.providers;
 
+import com.mypersonalupdates.db.DBConnection;
+import com.mypersonalupdates.db.DBException;
+import com.mypersonalupdates.db.actions.UpdatesProviderAttributeActions;
+
 public class UpdatesProviderAttribute {
 
-    private Integer ID;
+    private Integer attrID;
     private UpdatesProvider provider;
     private boolean multi;
 
-    //TODO: Cambiar en el diagrama signature (dice Boolean y debería ser boolean)
-    private UpdatesProviderAttribute(Integer ID, UpdatesProvider provider, boolean multi) {
-        this.ID = ID;
+    private UpdatesProviderAttribute(Integer attrID, UpdatesProvider provider, boolean multi) {
+        this.attrID = attrID;
         this.provider = provider;
         this.multi = multi;
     }
 
-    public static UpdatesProviderAttribute create(Integer ID) {
-        Integer attr = null;
+    public static UpdatesProviderAttribute create(UpdatesProvider provider, Integer attrID) throws DBException {
+        boolean multi;
 
-        return null;
+        try {
+            multi = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(UpdatesProviderAttributeActions.class).getMulti(
+                            attrID,
+                            provider.getID()
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
+
+        return new UpdatesProviderAttribute(attrID, provider, multi);
     }
 
-    public static UpdatesProviderAttribute create(UpdatesProvider provider, String name) {
-        return null;
-    }
-
-    public Integer getID() {
-        return this.ID;
+    public Integer getAttrID() {
+        return this.attrID;
     }
 
     public UpdatesProvider getProvider() {
         return this.provider;
     }
 
-    public String getName() {
-        return null;
+    public String getName() throws DBException {
+        try {
+            return DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(UpdatesProviderAttributeActions.class).getName(
+                            this.attrID
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
     }
 
-    public String getDescription() {
-        return null;
+    public String getDescription() throws DBException {
+        try {
+            return DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(UpdatesProviderAttributeActions.class).getDescription(
+                            this.attrID
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
     }
 
     boolean isMultivalued() {

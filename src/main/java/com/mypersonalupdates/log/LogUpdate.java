@@ -111,7 +111,7 @@ public class LogUpdate implements Update{
                     handle -> handle.attach(UpdateActions.class).getAttributeValues(
                             this.ID,
                             attr.getProvider().getID(),
-                            attr.getID()
+                            attr.getAttrID()
                     )
             );
 
