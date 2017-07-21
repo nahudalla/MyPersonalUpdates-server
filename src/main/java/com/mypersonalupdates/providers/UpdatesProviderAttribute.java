@@ -65,7 +65,20 @@ public class UpdatesProviderAttribute {
         }
     }
 
-    boolean isMultivalued() {
+    public boolean isMultivalued() {
         return this.multi;
+    }
+
+    public String getFilterNotes() throws DBException {
+        try {
+            return DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(UpdatesProviderAttributeActions.class).getFilterNotes(
+                            attrID,
+                            provider.getID()
+                    )
+            );
+        } catch (Exception e) {
+            throw new DBException(e);
+        }
     }
 }
