@@ -11,8 +11,8 @@ import java.sql.SQLException;
 public class UpdatesProviderAttributeMapper implements ResultSetMapper<UpdatesProviderAttribute> {
     @Override
     public UpdatesProviderAttribute map(int i, ResultSet resultSet, StatementContext statementContext) throws SQLException {
-        Integer providerID = resultSet.findColumn("providerID");
-        Integer attrID = resultSet.findColumn("attrID");
+        Integer providerID = resultSet.getInt("providerID");
+        Integer attrID = resultSet.getInt("attrID");
         return UpdatesProviderAttribute.create(
                 UpdatesProvidersManager.getInstance().getProvider(providerID),
                 attrID
