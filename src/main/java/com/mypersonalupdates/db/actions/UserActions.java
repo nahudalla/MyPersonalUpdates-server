@@ -1,10 +1,11 @@
 package com.mypersonalupdates.db.actions;
 
+import com.mypersonalupdates.db.mappers.ExistsMapper;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
-import javax.xml.ws.BindingType;
 import java.util.Iterator;
 
 public interface UserActions {
@@ -50,14 +51,30 @@ public interface UserActions {
             @Bind("userID") Integer userID
     );
 
-    @SqlQuery("SELECT value FROM user_updates_provider_attribute WHERE userID = :userId AND providerID = :providerID AND name = :attrName")
+    @SqlQuery("SELECT value FROM user_updates_provider_attribute WHERE userID = :userID AND providerID = :providerID AND name = :attrName")
     String getProviderAttribute(
             @Bind("userID") Integer userID,
             @Bind("providerID") Integer providerID,
             @Bind("attrName") String attrName
     );
 
-    @SqlUpdate("UPDATE user_updates_provider_attribute SET value = :value WHERE userID = :userId AND providerID = :providerID AND name = :attrName")
+    @SqlQuery("SELECT userID FROM user_updates_provider_attribute WHERE userID = :userID AND providerID = :providerID AND name = :name")
+    @Mapper(ExistsMapper.class)
+    boolean existsProviderAttribute(
+            @Bind("userID") Integer userID,
+            @Bind("providerID") Integer providerID,
+            @Bind("name") String attrName
+    );
+
+    @SqlUpdate("INSERT INTO user_updates_provider_attribute (userID, providerID, name, value) VALUES (:userID, :providerID, :name, :value)")
+    int insertProviderAttribute(
+            @Bind("userID") Integer userID,
+            @Bind("providerID") Integer providerID,
+            @Bind("name") String attrName,
+            @Bind("value") String value
+    );
+
+    @SqlUpdate("UPDATE user_updates_provider_attribute SET value = :value WHERE userID = :userID AND providerID = :providerID AND name = :attrName")
     void setProviderAttribute(
             @Bind("userID") Integer userID,
             @Bind("providerID") Integer providerID,
