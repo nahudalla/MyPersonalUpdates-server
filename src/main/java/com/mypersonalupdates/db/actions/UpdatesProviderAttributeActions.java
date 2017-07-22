@@ -22,12 +22,12 @@ public interface UpdatesProviderAttributeActions {
             @Bind("providerID") Integer providerID
     );
 
-    @SqlQuery("SELECT description FROM update_provider_attribute WHERE ID = :ID")
+    @SqlQuery("SELECT description FROM updates_provider_attribute WHERE ID = :ID")
     String getDescription(
             @Bind("ID") Integer ID
     );
 
-    @SqlQuery("SELECT name FROM update_provider_attribute WHERE ID = :ID")
+    @SqlQuery("SELECT name FROM updates_provider_attribute WHERE ID = :ID")
     String getName(
             @Bind("ID") Integer ID
     );

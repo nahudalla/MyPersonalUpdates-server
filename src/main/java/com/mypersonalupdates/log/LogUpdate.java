@@ -25,7 +25,7 @@ public class LogUpdate implements Update{
                             ID)
             );
 
-            return exists ? null : new LogUpdate(ID);
+            return !exists ? null : new LogUpdate(ID);
 
         } catch (Exception e) {
             throw new DBException(e);

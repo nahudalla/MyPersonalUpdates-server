@@ -5,7 +5,7 @@ import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
 import java.util.Date;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 public interface UpdateActions {
 
     @SqlQuery("SELECT ID FROM 'update' WHERE ID = :ID")
-    @RegisterMapper(ExistsMapper.class)
+    @Mapper(ExistsMapper.class)
     boolean exists(
             @Bind("ID") Integer ID
     );
