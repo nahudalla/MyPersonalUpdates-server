@@ -1,13 +1,13 @@
 import com.mypersonalupdates.Filter;
 import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.filters.PartialAttributeFilter;
+import com.mypersonalupdates.log.Log;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 import com.mypersonalupdates.providers.twitter.TwitterProvider;
 import com.mypersonalupdates.users.User;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 /* ATENCIÓN!!
 *
@@ -18,7 +18,7 @@ import java.util.Iterator;
 *
 * */
 
-public class TwitterProviderTest {
+public class TwitterProvider_Log_Test {
     public static void main(String[] args) {
         UpdatesProvider provider = TwitterProvider.getInstance();
 
@@ -67,7 +67,7 @@ public class TwitterProviderTest {
         Filter filter = null;
 
         try {
-            filter = PartialAttributeFilter.create(attr1, "Argentina");
+            filter = PartialAttributeFilter.create(attr1, "#7YearsOfOneDirection");
         } catch (DBException e) {
             e.printStackTrace();
         }
@@ -75,13 +75,11 @@ public class TwitterProviderTest {
         assert filter != null;
 
         filter.getValues(attr1).forEach(
-                value -> {
-                    System.out.println(value.getValue());
-                }
+                value -> System.out.println(value.getValue())
         );
 
         UpdatesProviderAttribute finalAttr = attr1;
-        Long id = provider.subscribe(
+/*        Long id = provider.subscribe(
                 nahuelUser,
                 filter,
                 update -> {
@@ -101,6 +99,14 @@ public class TwitterProviderTest {
 
                     System.out.println("MAIN (" + values.size() + "):" + iterator.next());
                 }
+        );
+
+        assert id != null;*/
+
+        Long id = provider.subscribe(
+                nahuelUser,
+                filter,
+                Log.getInstance()
         );
 
         assert id != null;
