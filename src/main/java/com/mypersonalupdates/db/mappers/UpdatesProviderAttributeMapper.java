@@ -1,6 +1,7 @@
 package com.mypersonalupdates.db.mappers;
 
 import com.mypersonalupdates.UpdatesProvidersManager;
+import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
@@ -13,9 +14,14 @@ public class UpdatesProviderAttributeMapper implements ResultSetMapper<UpdatesPr
     public UpdatesProviderAttribute map(int i, ResultSet resultSet, StatementContext statementContext) throws SQLException {
         Integer providerID = resultSet.getInt("providerID");
         Integer attrID = resultSet.getInt("attrID");
-        return UpdatesProviderAttribute.create(
-                UpdatesProvidersManager.getInstance().getProvider(providerID),
-                attrID
-        );
+        try {
+            return UpdatesProviderAttribute.create(
+                    UpdatesProvidersManager.getInstance().getProvider(providerID),
+                    attrID
+            );
+        } catch (DBException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
