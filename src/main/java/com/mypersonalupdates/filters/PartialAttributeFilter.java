@@ -30,7 +30,6 @@ public class PartialAttributeFilter extends AttributeFilter{
 
     @Override
     public Collection<FilterValue> getValues(UpdatesProviderAttribute attr) {
-        // TODO: implementar public boolean equals(UpdatesProviderAttribute other) en UpdatesProviderAttribute
         if(this.attr.equals(attr)) {
             Collection<FilterValue> values = new LinkedList<>();
             values.add(new FilterValue(this.value, true));

@@ -14,9 +14,9 @@ public abstract class AttributeFilter extends Filter{
 
     public static final String DATABASE_TYPE = "AttributeFilter";
 
-    private Integer ID;
-    protected UpdatesProviderAttribute attr;
-    protected String value;
+    private final Integer ID;
+    protected final UpdatesProviderAttribute attr;
+    protected final String value;
 
     protected AttributeFilter(Integer ID, UpdatesProviderAttribute attr, String value) {
         this.ID = ID;
@@ -66,8 +66,6 @@ public abstract class AttributeFilter extends Filter{
     //TODO: Agregar al diagrama de clases
     public static AttributeFilter create(Integer ID) throws DBException {
         String type = AttributeFilter.getTypeFromID(ID);
-
-        // TODO: Implementar en UpdatesProviderAttribute create
 
         if(type == null)
             return null;
