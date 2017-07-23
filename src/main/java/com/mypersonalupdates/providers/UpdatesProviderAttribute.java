@@ -6,9 +6,9 @@ import com.mypersonalupdates.db.actions.UpdatesProviderAttributeActions;
 
 public class UpdatesProviderAttribute {
 
-    private Integer attrID;
-    private UpdatesProvider provider;
-    private Boolean multi;
+    private final Integer attrID;
+    private final UpdatesProvider provider;
+    private final Boolean multi;
 
     private UpdatesProviderAttribute(UpdatesProvider provider, Integer attrID, Boolean multi) {
         this.attrID = attrID;
@@ -80,5 +80,18 @@ public class UpdatesProviderAttribute {
         } catch (Exception e) {
             throw new DBException(e);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        
+        if (!(o instanceof UpdatesProviderAttribute))
+            return false;
+
+        UpdatesProviderAttribute attribute = (UpdatesProviderAttribute) o;
+
+        return this.getProvider().getID().equals(attribute.getProvider().getID()) &&
+                this.getAttrID().equals(attribute.getAttrID());
     }
 }

@@ -10,9 +10,10 @@ import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Queue;
 
 public class LogUpdate implements Update{
-    private Integer ID;
+    private final Integer ID;
 
     private LogUpdate(Integer ID){
         this.ID = ID;
@@ -32,49 +33,29 @@ public class LogUpdate implements Update{
         }
     }
 
-    public static LogUpdate create(Update update) throws DBException {
-        Integer providerID = update.getProvider().getID();
-        String IDFRomProvider = update.getIDFromProvider();
-
-        Integer ID = LogUpdate.getIDFromProviderData(providerID, IDFRomProvider);
-
-        if (ID == null) {
-
-            try {
-                ID = DBConnection.getInstance().withHandle(
-                        handle -> handle.attach(UpdateActions.class).create(
-                                providerID,
-                                IDFRomProvider,
-                                update.getTimestamp()
-                        )
-                );
-            } catch (Exception e) {
-                throw new DBException(e);
-            }
-        }
-
-        return (ID == null) ? null : new LogUpdate(ID);
-    }
-
-    private static Integer getIDFromProviderData(Integer providerID, String IDFromProvider) throws DBException {
-        Integer ID;
-
+    public static void create(Queue<Update> updates) throws DBException {
         try {
-            ID = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(UpdateActions.class).getIDFromProviderData(
-                            providerID,
-                            IDFromProvider
-                    )
-            );
+            DBConnection.getInstance().withHandle((handle)-> {
+                UpdateActions actions = handle.attach(UpdateActions.class);
 
-            return ID;
+                Update update;
+                while(!updates.isEmpty()) {
+                    update = updates.remove();
+                    if(!actions.existsProviderData(
+                            update.getProvider().getID(),
+                            update.getIDFromProvider()
+                    ))
+                        actions.create(update);
+                }
 
+                return null;
+            });
         } catch (Exception e) {
             throw new DBException(e);
         }
     }
 
-    public UpdatesProvider getProvider() throws DBException {
+    public UpdatesProvider getProvider() {
         try {
             Integer providerID = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdateActions.class).getProvider(
@@ -83,14 +64,14 @@ public class LogUpdate implements Update{
             );
 
             return (providerID == null) ? null : UpdatesProvidersManager.getInstance().getProvider(providerID);
-
         } catch (Exception e) {
-            throw new DBException(e);
+            e.printStackTrace();
+            return null;
         }
     }
 
     @Override
-    public Date getTimestamp() throws DBException {
+    public Date getTimestamp() {
         try {
             return DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdateActions.class).getTimestamp(
@@ -99,12 +80,13 @@ public class LogUpdate implements Update{
             );
 
         } catch (Exception e) {
-            throw new DBException(e);
+            e.printStackTrace();
+            return null;
         }
     }
 
     @Override
-    public Collection<String> getAttributeValues(UpdatesProviderAttribute attr) throws DBException {
+    public Collection<String> getAttributeValues(UpdatesProviderAttribute attr) {
         try {
             return  DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdateActions.class).getAttributeValues(
@@ -115,12 +97,13 @@ public class LogUpdate implements Update{
             );
 
         } catch (Exception e) {
-            throw new DBException(e);
+            e.printStackTrace();
+            return null;
         }
     }
 
     @Override
-    public String getIDFromProvider() throws DBException {
+    public String getIDFromProvider() {
         try {
             return DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdateActions.class).getIDFromProvider(
@@ -129,7 +112,8 @@ public class LogUpdate implements Update{
             );
 
         } catch (Exception e) {
-            throw new DBException(e);
+            e.printStackTrace();
+            return null;
         }
     }
 }
