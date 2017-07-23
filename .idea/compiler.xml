@@ -20,9 +20,8 @@
         <module name="TPFinalPOO" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="MyPersonalUpdates-server" target="1.8" />
-      <module name="TPFinalPOO" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
