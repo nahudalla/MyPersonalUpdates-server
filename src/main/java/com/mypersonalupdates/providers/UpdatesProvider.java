@@ -15,4 +15,6 @@ public interface UpdatesProvider {
     Long subscribe(User user, Filter filter, UpdatesConsumer consumer);
     boolean unsubscribe(User user, Long subscriberID);
     void stop();
+    @Override
+    boolean equals(Object o);
 }
