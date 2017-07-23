@@ -3,6 +3,7 @@ package com.mypersonalupdates.providers.twitter;
 import com.google.common.collect.Lists;
 import com.mypersonalupdates.Config;
 import com.mypersonalupdates.Update;
+import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 import twitter4j.Status;
 
@@ -16,6 +17,11 @@ public class TwitterUpdate implements Update {
 
     TwitterUpdate(Status status) {
         this.status = status;
+    }
+
+    @Override
+    public UpdatesProvider getProvider() {
+        return TwitterProvider.getInstance();
     }
 
     @Override

@@ -98,7 +98,6 @@ public class TwitterProvider implements UpdatesProvider {
     }
 
     @Override
-    // TODO: agregar a UpdatesProvider
     public boolean equals(Object o) {
         return this == o || (o instanceof TwitterProvider);
     }
