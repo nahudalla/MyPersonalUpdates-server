@@ -22,7 +22,7 @@ public class PartialAttributeFilter extends AttributeFilter{
         super(ID, attr, value.toLowerCase());
     }
 
-    public PartialAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
+    public static PartialAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
         Integer filterID;
         filterID = AttributeFilter.create(attr, value, PartialAttributeFilter.DATABASE_TYPE);
         return filterID == null ? null : new PartialAttributeFilter(filterID, attr, value);
@@ -30,7 +30,6 @@ public class PartialAttributeFilter extends AttributeFilter{
 
     @Override
     public Collection<FilterValue> getValues(UpdatesProviderAttribute attr) {
-        // TODO: implementar public boolean equals(UpdatesProviderAttribute other) en UpdatesProviderAttribute
         if(this.attr.equals(attr)) {
             Collection<FilterValue> values = new LinkedList<>();
             values.add(new FilterValue(this.value, true));

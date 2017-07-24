@@ -14,7 +14,7 @@ public interface CompoundFilterActions {
             @Bind("TYPE") String type
     );
 
-    @SqlQuery("SELECT ID FROM compound_filter WHERE filterID1 = :f1 AND filterD2 = :f2 AND TYPE = :TYPE LIMIT 1")
+    @SqlQuery("SELECT ID FROM compound_filter WHERE filterID1 = :f1 AND filterID2 = :f2 AND TYPE = :TYPE LIMIT 1")
     Integer getIDFromContent(
             @Bind("f1") Integer f1,
             @Bind("f2") Integer f2,

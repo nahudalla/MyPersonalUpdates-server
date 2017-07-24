@@ -69,3 +69,4 @@ hs_err_pid*
 
 .idea/markdown-*
 /ignored/
+/src/main/resources/config.conf

@@ -25,7 +25,7 @@ public class ExactAttributeFilter extends AttributeFilter{
         super(ID, attr, value);
     }
 
-    public ExactAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
+    public static ExactAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
         Integer filterID;
         filterID = AttributeFilter.create(attr, value, ExactAttributeFilter.DATABASE_TYPE);
         return filterID == null ? null : new ExactAttributeFilter(filterID, attr, value);
@@ -33,7 +33,6 @@ public class ExactAttributeFilter extends AttributeFilter{
 
     @Override
     public Collection<FilterValue> getValues(UpdatesProviderAttribute attr) {
-        // TODO: implementar public boolean equals(UpdatesProviderAttribute other) en UpdatesProviderAttribute
         if(this.attr.equals(attr)) {
             Collection<FilterValue> values = new LinkedList<>();
             values.add(new FilterValue(this.value, false));

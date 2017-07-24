@@ -77,6 +77,11 @@ public abstract class Filter {
 
     public abstract Integer getID();
 
+    @Override
+    public int hashCode() {
+        return this.getID();
+    }
+
     // TODO: agregar al diagrama
     protected static void removeFilterByID(Integer filterID) throws DBException {
         try {

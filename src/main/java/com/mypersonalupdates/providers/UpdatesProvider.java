@@ -1,10 +1,6 @@
 package com.mypersonalupdates.providers;
 
-import com.mypersonalupdates.Filter;
 import com.mypersonalupdates.UpdatesConsumer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public interface UpdatesProvider {
     Integer getID();
