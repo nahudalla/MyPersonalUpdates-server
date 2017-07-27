@@ -5,7 +5,6 @@ import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.db.actions.UserActions;
 import com.mypersonalupdates.providers.UpdatesProvider;
 
-import javax.jws.soap.SOAPBinding;
 import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.Iterator;
@@ -17,7 +16,7 @@ public class User {
     private Integer id = null;
 
     private static String sha256(String value) {
-        try{
+        try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(value.getBytes());
             byte[] bytes = md.digest();
@@ -25,7 +24,7 @@ public class User {
             for (byte b : bytes)
                 result.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
             return result.toString();
-        } catch(Exception ex){
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -40,11 +39,11 @@ public class User {
                             User.sha256(password)
                     )
             );
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new DBException(e);
         }
 
-        if(rowsAffected == 0)
+        if (rowsAffected == 0)
             return null;
         else
             return User.getFromUsername(username);
@@ -60,11 +59,11 @@ public class User {
                             User.sha256(password)
                     )
             );
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new DBException(e);
         }
 
-        if(UID == null)
+        if (UID == null)
             return null;
         else
             return new User(UID);
@@ -77,11 +76,11 @@ public class User {
             UID = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UserActions.class).validateId(id)
             );
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new DBException(e);
         }
 
-        if(UID == null)
+        if (UID == null)
             return null;
         else
             return new User(UID);
@@ -94,17 +93,17 @@ public class User {
             UID = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UserActions.class).idFromUsername(username)
             );
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new DBException(e);
         }
 
-        if(UID == null)
+        if (UID == null)
             return null;
         else
             return new User(UID);
     }
 
-    private User(Integer id){
+    private User(Integer id) {
         this.id = id;
     }
 
@@ -117,7 +116,7 @@ public class User {
             return DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UserActions.class).usernameFromId(this.id)
             );
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new DBException(e);
         }
     }
@@ -133,12 +132,12 @@ public class User {
             throw new DBException(e);
         }
 
-        if(iterator == null || !iterator.hasNext())
+        if (iterator == null || !iterator.hasNext())
             return null;
 
         Collection<Category> categories = new LinkedList<>();
 
-        while(iterator.hasNext())
+        while (iterator.hasNext())
             categories.add(Category.create(this, iterator.next()));
 
         return categories;
@@ -180,18 +179,26 @@ public class User {
     }
 
     // TODO: arreglar nombres en diagrama
-    void setAttribute(UpdatesProvider provider, String attributeName, String newValue) throws DBException {
+    public void setAttribute(UpdatesProvider provider, String attributeName, String newValue) throws DBException {
+        UserActions actions = DBConnection.getInstance().onDemand(UserActions.class);
+
         try {
-            DBConnection.getInstance().withHandle(
-                    (DBConnection.HandleCallback<Void>) handle -> {
-                        handle.attach(UserActions.class).setProviderAttribute(
-                                this.getID(),
-                                provider.getID(),
-                                attributeName,
-                                newValue
-                        );
-                        return null;
-                    });
+            if (actions.existsProviderAttribute(this.getID(), provider.getID(), attributeName)) {
+                actions.setProviderAttribute(
+                        this.getID(),
+                        provider.getID(),
+                        attributeName,
+                        newValue
+                );
+            } else {
+                actions.insertProviderAttribute(
+                        this.getID(),
+                        provider.getID(),
+                        attributeName,
+                        newValue
+                );
+            }
+
         } catch (Exception e) {
             throw new DBException(e);
         }
