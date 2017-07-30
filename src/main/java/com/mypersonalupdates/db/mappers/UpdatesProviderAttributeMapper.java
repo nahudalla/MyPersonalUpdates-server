@@ -9,11 +9,15 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UpdatesProviderAttributeMapper implements ResultSetMapper<UpdatesProviderAttribute> {
+/**
+ * Esta clase convierte el resultado de una consulta en la base de datos
+ * a una instancia de la clase {@link UpdatesProviderAttribute}
+ */
+public final class UpdatesProviderAttributeMapper implements ResultSetMapper<UpdatesProviderAttribute> {
     @Override
     public UpdatesProviderAttribute map(int i, ResultSet resultSet, StatementContext statementContext) throws SQLException {
-        Integer providerID = resultSet.getInt("providerID");
-        Integer attrID = resultSet.getInt("attrID");
+        Long providerID = resultSet.getLong("providerID");
+        Long attrID = resultSet.getLong("attrID");
         try {
             return UpdatesProviderAttribute.create(
                     UpdatesProvidersManager.getInstance().getProvider(providerID),
