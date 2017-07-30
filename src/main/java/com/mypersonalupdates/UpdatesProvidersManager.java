@@ -6,10 +6,14 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Map;
 
+/**
+ * Esta clase se encarga de almacenar los proveedores
+ * disponibles en el sistema.
+ */
 public class UpdatesProvidersManager {
-    private final Map<Integer, UpdatesProvider> providers = new Hashtable<>();
+    private final Map<Long, UpdatesProvider> providers = new Hashtable<>();
 
-    private static UpdatesProvidersManager ourInstance = new UpdatesProvidersManager();
+    private static final UpdatesProvidersManager ourInstance = new UpdatesProvidersManager();
     public static UpdatesProvidersManager getInstance() {
         return ourInstance;
     }
@@ -23,7 +27,7 @@ public class UpdatesProvidersManager {
         }
     }
 
-    public UpdatesProvider getProvider(Integer ID){
+    public UpdatesProvider getProvider(Long ID){
         synchronized (this.providers) {
             return this.providers.get(ID);
         }
