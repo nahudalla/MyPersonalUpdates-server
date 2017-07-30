@@ -2,43 +2,49 @@ package com.mypersonalupdates.db.actions;
 
 import com.mypersonalupdates.Update;
 import com.mypersonalupdates.db.DBException;
+import com.mypersonalupdates.db.mappers.InstantMapper;
 import com.mypersonalupdates.db.mappers.ExistsMapper;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 
+/**
+ * Acciones en la base de datos para la clase {@link Update}
+ */
 public abstract class UpdateActions {
-
     @SqlQuery("SELECT ID FROM `update` WHERE ID = :ID")
     @Mapper(ExistsMapper.class)
     public abstract boolean exists(
-            @Bind("ID") Integer ID
+            @Bind("ID") Long ID
     );
 
     @SqlUpdate("INSERT INTO `update` (providerID, IDFromProvider, timestamp) VALUES (:providerID, :IDFromProvider, :timestamp)")
     @GetGeneratedKeys
-    protected abstract Integer insertUpdate(
-            @Bind("providerID") Integer providerID,
+    protected abstract Long insertUpdate(
+            @Bind("providerID") Long providerID,
             @Bind("IDFromProvider") String IDFromProvider,
-            @Bind("timestamp") Date timestamp
+            @Bind("timestamp") Timestamp timestamp
     );
 
     @SqlBatch("INSERT INTO update_attribute (updateID, providerID, attrID, value) VALUES (:uID, :pID, :aID, :value)")
     protected abstract int[] insertUpdateAttributes(
-            @Bind("uID") Integer updateID,
-            @Bind("pID") Integer providerID,
-            @Bind("aID") Iterator<Integer> attrIDsIterator,
+            @Bind("uID") Long updateID,
+            @Bind("pID") Long providerID,
+            @Bind("aID") Iterator<Long> attrIDsIterator,
             @Bind("value") Iterator<String> valuesIterator
     );
 
     @Transaction
     public void create(Update update) throws DBException {
-        Integer uID = this.insertUpdate(
+        Long uID = this.insertUpdate(
                 update.getProvider().getID(),
                 update.getIDFromProvider(),
-                update.getTimestamp()
+                new Timestamp(update.getTimestamp().toEpochMilli())
         );
 
         if(uID == null)
@@ -49,7 +55,7 @@ public abstract class UpdateActions {
         if(attributes == null)
             return;
 
-        List<Integer> aIDs = new LinkedList<>();
+        List<Long> aIDs = new LinkedList<>();
         List<String> values = new LinkedList<>();
 
         for(UpdatesProviderAttribute attribute : attributes) {
@@ -85,30 +91,31 @@ public abstract class UpdateActions {
     @SqlQuery("SELECT IDFromProvider FROM `update` WHERE providerID = :providerID AND IDFromProvider = :IDFromProvider")
     @Mapper(ExistsMapper.class)
     public abstract boolean existsProviderData(
-            @Bind("providerID") Integer providerID,
+            @Bind("providerID") Long providerID,
             @Bind("IDFromProvider") String IDFromProvider
     );
 
     @SqlQuery("SELECT providerID FROM `update` WHERE ID = :ID")
-    public abstract Integer getProvider(
-            @Bind("ID") Integer ID
+    public abstract Long getProvider(
+            @Bind("ID") Long ID
     );
 
     @SqlQuery("SELECT timestamp FROM `update` WHERE ID = :ID")
-    public abstract Date getTimestamp(
-            @Bind("ID") Integer ID
+    @RegisterMapper(InstantMapper.class)
+    public abstract Instant getTimestamp(
+            @Bind("ID") Long ID
     );
 
     @SqlQuery("SELECT IDFromProvider FROM `update` WHERE ID = :ID")
     public abstract String getIDFromProvider(
-            @Bind("ID") Integer ID
+            @Bind("ID") Long ID
     );
 
     @SqlQuery("SELECT value FROM update_attribute WHERE updateID = :updateID AND providerID = :providerID AND attrID = :attrID")
     public abstract List<String> getAttributeValues(
-            @Bind("updateID") Integer updateID,
-            @Bind("providerID") Integer providerID,
-            @Bind("attrID") Integer attrID
+            @Bind("updateID") Long updateID,
+            @Bind("providerID") Long providerID,
+            @Bind("attrID") Long attrID
     );
 
 }
