@@ -1,17 +1,23 @@
 package com.mypersonalupdates.filters;
 
+import com.google.gson.JsonElement;
 import com.mypersonalupdates.Update;
 import com.mypersonalupdates.db.DBException;
+import com.mypersonalupdates.exceptions.SealedException;
+import com.mypersonalupdates.log.LogSQLQuery;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
 import java.util.Collection;
-import java.util.LinkedList;
 
-public class ExactAttributeFilter extends AttributeFilter{
-
+/**
+ * Esta clase representa un filtro sobre el valor exacto de
+ * un atributo de una actualización.
+ * {@link com.mypersonalupdates.Update} {@link Filter}
+ */
+public final class ExactAttributeFilter extends AttributeFilter{
     public static final String DATABASE_TYPE = "ExactAttributeFilter";
 
-    public static ExactAttributeFilter create(Integer ID) throws DBException {
+    public static ExactAttributeFilter create(Long ID) throws DBException {
         String fieldValue = AttributeFilter.getValueFromID(ID);
         UpdatesProviderAttribute attr = AttributeFilter.getAttributeFromID(ID);
 
@@ -21,24 +27,14 @@ public class ExactAttributeFilter extends AttributeFilter{
         return null;
     }
 
-    private ExactAttributeFilter(Integer ID, UpdatesProviderAttribute attr, String value) {
+    private ExactAttributeFilter(Long ID, UpdatesProviderAttribute attr, String value) {
         super(ID, attr, value);
     }
 
     public static ExactAttributeFilter create(UpdatesProviderAttribute attr, String value) throws DBException {
-        Integer filterID;
+        Long filterID;
         filterID = AttributeFilter.create(attr, value, ExactAttributeFilter.DATABASE_TYPE);
         return filterID == null ? null : new ExactAttributeFilter(filterID, attr, value);
-    }
-
-    @Override
-    public Collection<FilterValue> getValues(UpdatesProviderAttribute attr) {
-        if(this.attr.equals(attr)) {
-            Collection<FilterValue> values = new LinkedList<>();
-            values.add(new FilterValue(this.value, false));
-            return values;
-        }
-        return null;
     }
 
     @Override
@@ -46,5 +42,15 @@ public class ExactAttributeFilter extends AttributeFilter{
         Collection<String> attributeValues = update.getAttributeValues(this.attr);
 
         return attributeValues == null ? (this.value == null) : attributeValues.contains(this.value);
+    }
+
+    @Override
+    public JsonElement toJSON() {
+        return super.toJSON(ExactAttributeFilter.DATABASE_TYPE);
+    }
+
+    @Override
+    public void injectSQLConditions(LogSQLQuery query) throws SealedException {
+        super.injectSQLConditions(query, "#ATTRS_TABLE#.value = ?");
     }
 }
