@@ -70,3 +70,7 @@ hs_err_pid*
 .idea/markdown-*
 /ignored/
 /src/main/resources/config.conf
+/dependency-reduced-pom.xml
+/src/main/resources/jetty-logging.properties
+.idea/shelf/
+/target/
