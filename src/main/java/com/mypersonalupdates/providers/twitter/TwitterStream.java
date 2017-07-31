@@ -1,12 +1,13 @@
 package com.mypersonalupdates.providers.twitter;
 
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.mypersonalupdates.Config;
-import com.mypersonalupdates.Filter;
-import com.mypersonalupdates.UpdatesConsumer;
+import com.mypersonalupdates.filters.Filter;
 import com.mypersonalupdates.db.DBException;
-import com.mypersonalupdates.filters.FilterValue;
+import com.mypersonalupdates.exceptions.UserNotLoggedInToProviderException;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
+import com.mypersonalupdates.realtime.UpdatesConsumer;
 import com.mypersonalupdates.users.User;
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Client;
@@ -28,9 +29,15 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class TwitterStream implements StatusListener {
-    private static final List<Integer> DB_FOLLOWINGS_ATTR_IDS = Config.get().getIntList("providers.twitter.DBFollowingsAttrIDs");
-    private static final List<Integer> DB_TRACK_TERMS_ATTR_IDS = Config.get().getIntList("providers.twitter.DBTrackTermsAttrIDs");
+/**
+ * Esta clase representa una conexión a la API de Streaming
+ * de Twitter.com. Está asociada a un usuario del sistema
+ * específico y se encarga de despachar las actualizaciones
+ * en tiempo real pedidas por sus suscriptores.
+ * */
+public final class TwitterStream implements StatusListener {
+    private static final List<Long> DB_FOLLOWINGS_ATTR_IDS = Config.get().getLongList("providers.twitter.DBFollowingsAttrIDs");
+    private static final List<Long> DB_TRACK_TERMS_ATTR_IDS = Config.get().getLongList("providers.twitter.DBTrackTermsAttrIDs");
     private static final List<String> TWEET_SEARCH_LANGS = Config.get().getStringList("providers.twitter.TweetSearchLanguages");
     private static final boolean ENABLE_STALL_WARNINGS = Config.get().getBoolean("providers.twitter.EnableStallWarnings");
     private static final int MAX_PROCESSING_THREADS = Config.get().getInt("providers.twitter.maxMsgProcessingThreadsPerUser");
@@ -38,22 +45,28 @@ public class TwitterStream implements StatusListener {
 
     private final Hosts hosts = new HttpHosts(Constants.STREAM_HOST);
     private final Authentication authentication;
-    private final int userID;
+    private final long userID;
     private Twitter4jStatusClient t4jClient = null;
 
     private final Map<Filter, Map<Long, UpdatesConsumer>> consumers = new Hashtable<>();
     private final Map<Long, Filter> filtersById = new Hashtable<>();
     private Long nextSubscriberID = 0L;
 
-    TwitterStream(TwitterProvider provider, User user) throws DBException {
+    TwitterStream(TwitterProvider provider, User user) throws DBException, UserNotLoggedInToProviderException {
         this.userID = user.getID();
+
+        String accessToken = user.getAttribute(provider, "accessToken");
+        String accessTokenSecret = user.getAttribute(provider, "accessTokenSecret");
+
+        if(accessToken == null || accessTokenSecret == null)
+            throw new UserNotLoggedInToProviderException("Usuario no logueado en Twitter.");
 
         this.authentication = new OAuth1(
                 Config.get().getString("providers.twitter.consumerKey"),
                 Config.get().getString("providers.twitter.consumerSecret"),
 
-                user.getAttribute(provider, "providers.twitter.token"),
-                user.getAttribute(provider, "providers.twitter.tokenSecret")
+                accessToken,
+                accessTokenSecret
         );
     }
 
@@ -81,11 +94,11 @@ public class TwitterStream implements StatusListener {
         return id;
     }
 
-    private Collection<FilterValue> getAttributeValuesFromFilters(UpdatesProviderAttribute attr) {
-        Collection<FilterValue> ret = new LinkedList<>();
+    private Collection<String> getAttributeValuesFromFilters(UpdatesProviderAttribute attr) {
+        Collection<String> ret = new LinkedList<>();
 
         for (Filter filter : this.filtersById.values()) {
-            Collection<FilterValue> values = filter.getValues(attr);
+            Collection<String> values = filter.getValues(attr);
             if (values != null)
                 ret.addAll(values);
         }
@@ -98,19 +111,17 @@ public class TwitterStream implements StatusListener {
         List<String> terms = new LinkedList<>();
 
         for (UpdatesProviderAttribute attr : TwitterProvider.getInstance().getAttributes()) {
-            Collection<FilterValue> values = this.getAttributeValuesFromFilters(attr);
+            Collection<String> values = this.getAttributeValuesFromFilters(attr);
 
             if (values.size() == 0)
                 continue;
 
             if (TwitterStream.DB_FOLLOWINGS_ATTR_IDS.contains(attr.getAttrID())) {
-                for (FilterValue value : values) {
-                    followings.add(Long.valueOf(value.getValue()));
-                }
+                followings.addAll(
+                        Collections2.transform(values, Long::valueOf)
+                );
             } else if (TwitterStream.DB_TRACK_TERMS_ATTR_IDS.contains(attr.getAttrID())) {
-                for (FilterValue value : values) {
-                    terms.add(value.getValue());
-                }
+                terms.addAll(values);
             }
         }
 
@@ -207,6 +218,9 @@ public class TwitterStream implements StatusListener {
                 }
             });
         }
+
+        if(status.isRetweet())
+            this.onStatus(status.getRetweetedStatus());
     }
 
     @Override

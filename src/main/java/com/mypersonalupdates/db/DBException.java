@@ -1,5 +1,9 @@
 package com.mypersonalupdates.db;
 
+/**
+ * Esta clase es una excepción que representa un error
+ * al ejecutar una consulta en la base de datos.
+ */
 public class DBException extends Exception {
     public DBException() {
     }

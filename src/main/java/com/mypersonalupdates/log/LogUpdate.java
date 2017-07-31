@@ -8,18 +8,18 @@ import com.mypersonalupdates.db.actions.UpdateActions;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
+import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Queue;
 
-public class LogUpdate implements Update{
-    private final Integer ID;
+public final class LogUpdate implements Update{
+    private final Long ID;
 
-    private LogUpdate(Integer ID){
+    private LogUpdate(Long ID){
         this.ID = ID;
     }
 
-    public static LogUpdate create(Integer ID) throws DBException {
+    public static LogUpdate create(Long ID) throws DBException {
         try {
             boolean exists = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdateActions.class).exists(
@@ -57,7 +57,7 @@ public class LogUpdate implements Update{
 
     public UpdatesProvider getProvider() {
         try {
-            Integer providerID = DBConnection.getInstance().withHandle(
+            Long providerID = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdateActions.class).getProvider(
                             this.ID
                     )
@@ -71,7 +71,7 @@ public class LogUpdate implements Update{
     }
 
     @Override
-    public Date getTimestamp() {
+    public Instant getTimestamp() {
         try {
             return DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdateActions.class).getTimestamp(
@@ -115,5 +115,20 @@ public class LogUpdate implements Update{
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LogUpdate)) return false;
+
+        LogUpdate logUpdate = (LogUpdate) o;
+
+        return ID.equals(logUpdate.ID);
+    }
+
+    @Override
+    public int hashCode() {
+        return ID.hashCode();
     }
 }

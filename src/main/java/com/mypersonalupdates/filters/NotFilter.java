@@ -1,45 +1,60 @@
 package com.mypersonalupdates.filters;
 
-import com.mypersonalupdates.Filter;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mypersonalupdates.Update;
 import com.mypersonalupdates.db.DBConnection;
 import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.db.actions.NotFilterActions;
+import com.mypersonalupdates.exceptions.SealedException;
+import com.mypersonalupdates.log.LogSQLQuery;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
 import java.util.Collection;
 
-public class NotFilter extends Filter{
-    private Integer ID;
-    private Filter filter;
+/**
+ * Esta clase representa la negación lógica de un filtro.
+ * {@link Filter}
+ */
+public final class NotFilter extends Filter{
+    private final Filter filter;
 
     public static final String DATABASE_TYPE = "NotFilter";
 
-    private NotFilter(Integer ID, Filter filter) {
-        this.ID = ID;
+    private NotFilter(Long ID, Filter filter) {
+        super(ID);
         this.filter = filter;
     }
 
+    @Override
+    public boolean remove() throws DBException {
+        boolean removed = super.remove();
+        this.filter.remove();
+        return removed;
+    }
+
     //TODO: agregar al diagrama de clases
-    public static NotFilter create(Integer filterID) throws DBException {
-        Integer notFilterID;
+    public static NotFilter create(Long ID) throws DBException {
+        Long filterID;
 
         try {
-            notFilterID = DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(NotFilterActions.class).getIDFromContent(
-                            filterID
+            filterID = DBConnection.getInstance().withHandle(
+                    handle -> handle.attach(NotFilterActions.class).getContentFromID(
+                            ID
                     )
             );
         } catch (Exception e) {
             throw new DBException(e);
         }
 
-        return notFilterID == null ? null : new NotFilter(notFilterID, Filter.create(filterID));
+
+
+        return filterID == null ? null : new NotFilter(ID, Filter.create(filterID));
     }
 
     public static NotFilter create(Filter filter) throws DBException {
-        Integer filterID;
+        Long filterID;
 
         try {
             filterID = DBConnection.getInstance().withHandle(
@@ -55,7 +70,7 @@ public class NotFilter extends Filter{
             filterID = Filter.create(NotFilter.DATABASE_TYPE);
 
             int rowsAffected;
-            final Integer fID = filterID;
+            final Long fID = filterID;
 
             if (filterID != null) {
                 try {
@@ -85,8 +100,15 @@ public class NotFilter extends Filter{
     }
 
     @Override
-    public Collection<FilterValue> getValues(UpdatesProviderAttribute attr) {
+    public Collection<String> getValues(UpdatesProviderAttribute attr) {
         return null;
+    }
+
+    @Override
+    public void injectSQLConditions(LogSQLQuery query) throws SealedException {
+        query.appendToCondition("NOT (");
+        this.filter.injectSQLConditions(query);
+        query.appendToCondition(")");
     }
 
     @Override
@@ -95,7 +117,9 @@ public class NotFilter extends Filter{
     }
 
     @Override
-    public Integer getID() {
-        return this.ID;
+    public JsonElement toJSON() {
+        JsonObject object = super.toJSON(NotFilter.DATABASE_TYPE);
+        object.add("filter", this.filter.toJSON());
+        return object;
     }
 }

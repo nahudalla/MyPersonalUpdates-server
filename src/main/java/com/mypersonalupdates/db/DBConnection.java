@@ -7,10 +7,14 @@ import org.skife.jdbi.v2.Handle;
 
 import javax.sql.DataSource;
 
-public class DBConnection {
-    private static String DATABASE_URL = Config.get().getString("db.url");
-    private static String DATABASE_USER = Config.get().getString("db.user");
-    private static String DATABASE_PASSWORD = Config.get().getString("db.password");
+/**
+ * Esta clase encapsula la conexción a la base de datos,
+ * que es realizada con la librería JDBI.
+ */
+public final class DBConnection {
+    private static final String DATABASE_URL = Config.get().getString("db.url");
+    private static final String DATABASE_USER = Config.get().getString("db.user");
+    private static final String DATABASE_PASSWORD = Config.get().getString("db.password");
 
     private static DataSource getDataSource() {
         MySQLDataSource mysqlDS = new MySQLDataSource();
@@ -26,7 +30,7 @@ public class DBConnection {
         return new DBConnection();
     }
 
-    private DBI dbi;
+    private final DBI dbi;
 
     private DBConnection() {
         this.dbi = new DBI(DBConnection.getDataSource());
@@ -36,7 +40,7 @@ public class DBConnection {
         return this.dbi.onDemand(objType);
     }
 
-    public <T> T withHandle(HandleCallback<T> handleCallback) throws Exception {
+    public <T> T withHandle(HandleCallback<T> handleCallback) {
         return this.dbi.withHandle(handleCallback);
     }
 

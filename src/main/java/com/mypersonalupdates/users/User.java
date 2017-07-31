@@ -1,32 +1,28 @@
 package com.mypersonalupdates.users;
 
+import com.google.common.hash.Hashing;
 import com.mypersonalupdates.db.DBConnection;
 import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.db.actions.UserActions;
 import com.mypersonalupdates.providers.UpdatesProvider;
 
-import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class User {
+/**
+ * Esta clase representa a un usuario del sistema
+ * y administra su información asociada, como sus
+ * categorías y los datos almacenados por los
+ * proveedores que utiliza.
+ */
+public final class User {
     // TODO: soporte para cambio de contraseñas
 
-    private Integer id = null;
+    private Long id = null;
 
     private static String sha256(String value) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(value.getBytes());
-            byte[] bytes = md.digest();
-            StringBuffer result = new StringBuffer();
-            for (byte b : bytes)
-                result.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-            return result.toString();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+        return Hashing.sha256().hashString(value).toString();
     }
 
     public static User createNew(String username, String password) throws DBException {
@@ -50,7 +46,7 @@ public class User {
     }
 
     public static User getFromCredentials(String username, String password) throws DBException {
-        Integer UID;
+        Long UID;
 
         try {
             UID = DBConnection.getInstance().withHandle(
@@ -69,8 +65,8 @@ public class User {
             return new User(UID);
     }
 
-    public static User getFromID(Integer id) throws DBException {
-        Integer UID;
+    public static User getFromID(Long id) throws DBException {
+        Long UID;
 
         try {
             UID = DBConnection.getInstance().withHandle(
@@ -87,7 +83,7 @@ public class User {
     }
 
     public static User getFromUsername(String username) throws DBException {
-        Integer UID;
+        Long UID;
 
         try {
             UID = DBConnection.getInstance().withHandle(
@@ -103,11 +99,15 @@ public class User {
             return new User(UID);
     }
 
-    private User(Integer id) {
+    public static User getInstanceFromExistingID(Long ID) {
+        return new User(ID);
+    }
+
+    private User(Long id) {
         this.id = id;
     }
 
-    public Integer getID() {
+    public Long getID() {
         return this.id;
     }
 
@@ -143,18 +143,11 @@ public class User {
         return categories;
     }
 
-    public String getPassword() throws DBException {
-        try {
-            return DBConnection.getInstance().withHandle(
-                    handle -> handle.attach(UserActions.class).getPasswordFromID(this.getID())
-            );
-        } catch (Exception e) {
-            throw new DBException(e);
-        }
-    }
-
     public boolean remove() throws DBException {
         try {
+            for (Category category : this.getCategories())
+                category.remove();
+
             return 1 == DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UserActions.class).removeUserFromID(this.getID())
             );
@@ -202,5 +195,20 @@ public class User {
         } catch (Exception e) {
             throw new DBException(e);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        return id.equals(user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

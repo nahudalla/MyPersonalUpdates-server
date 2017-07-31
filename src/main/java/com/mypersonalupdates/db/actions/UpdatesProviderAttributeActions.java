@@ -3,12 +3,15 @@ package com.mypersonalupdates.db.actions;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 
+/**
+ * Acciones en la base de datos para la clase {@link com.mypersonalupdates.providers.UpdatesProviderAttribute}
+ */
 public interface UpdatesProviderAttributeActions {
 
     @SqlQuery("SELECT filterNotes FROM updates_provider_attribute_association WHERE providerID = :providerID AND attrID = :attrID")
     String getFilterNotes(
-            @Bind("providerID") Integer providerID,
-            @Bind("attrID")     Integer attrID
+            @Bind("providerID") Long providerID,
+            @Bind("attrID")     Long attrID
     );
 
     @SqlQuery(  " SELECT updates_provider_attribute.multi " +
@@ -18,17 +21,17 @@ public interface UpdatesProviderAttributeActions {
                 " WHERE updates_provider_attribute_association.providerID = :providerID " +
                 " AND updates_provider_attribute_association.attrID = :attrID")
     Boolean getMulti(
-            @Bind("attrID") Integer attrID,
-            @Bind("providerID") Integer providerID
+            @Bind("attrID") Long attrID,
+            @Bind("providerID") Long providerID
     );
 
     @SqlQuery("SELECT description FROM updates_provider_attribute WHERE ID = :ID")
     String getDescription(
-            @Bind("ID") Integer ID
+            @Bind("ID") Long ID
     );
 
     @SqlQuery("SELECT name FROM updates_provider_attribute WHERE ID = :ID")
     String getName(
-            @Bind("ID") Integer ID
+            @Bind("ID") Long ID
     );
 }

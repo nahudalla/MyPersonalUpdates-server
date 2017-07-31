@@ -3,12 +3,15 @@ package com.mypersonalupdates;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 
+import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
 
+/**
+ * Esta clase representa una actualización de un proveedor.
+ */
 public interface Update {
     UpdatesProvider getProvider();
-    Date getTimestamp();
+    Instant getTimestamp();
     Collection<String> getAttributeValues(UpdatesProviderAttribute attr);
     String getIDFromProvider();
 }

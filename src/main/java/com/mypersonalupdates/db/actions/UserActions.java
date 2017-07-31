@@ -8,26 +8,29 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
 import java.util.Iterator;
 
+/**
+ * Acciones en la bse de datos para la clase {@link com.mypersonalupdates.users.User}
+ */
 public interface UserActions {
     @SqlQuery("SELECT user.ID FROM user WHERE user.username = :user AND user.password = :password LIMIT 1")
-    Integer validateLoginData(
+    Long validateLoginData(
             @Bind("user") String user,
             @Bind("password") String password
     );
 
     @SqlQuery("SELECT user.ID FROM user WHERE user.ID = :id LIMIT 1")
-    Integer validateId(
-            @Bind("id") int id
+    Long validateId(
+            @Bind("id") long id
     );
 
     @SqlQuery("SELECT user.ID FROM user WHERE user.username = :user LIMIT 1")
-    Integer idFromUsername(
+    Long idFromUsername(
             @Bind("user") String username
     );
 
     @SqlQuery("SELECT user.username FROM user WHERE user.ID = :id LIMIT 1")
     String usernameFromId(
-            @Bind("id") Integer id
+            @Bind("id") Long id
     );
 
     @SqlUpdate("INSERT INTO user (user.username, user.password) VALUES (:user, :password)")
@@ -38,46 +41,41 @@ public interface UserActions {
 
     @SqlQuery("SELECT category.name FROM category WHERE category.userID = :userID")
     Iterator<String> categoryNamesFromUserID(
-            @Bind("userID") Integer userID
-    );
-
-    @SqlQuery("SELECT user.password FROM user WHERE user.ID = :userID LIMIT 1")
-    String getPasswordFromID(
-            @Bind("userID") Integer userID
+            @Bind("userID") Long userID
     );
 
     @SqlUpdate("DELETE FROM user WHERE user.ID = :userID")
     int removeUserFromID(
-            @Bind("userID") Integer userID
+            @Bind("userID") Long userID
     );
 
     @SqlQuery("SELECT value FROM user_updates_provider_attribute WHERE userID = :userID AND providerID = :providerID AND name = :attrName")
     String getProviderAttribute(
-            @Bind("userID") Integer userID,
-            @Bind("providerID") Integer providerID,
+            @Bind("userID") Long userID,
+            @Bind("providerID") Long providerID,
             @Bind("attrName") String attrName
     );
 
     @SqlQuery("SELECT userID FROM user_updates_provider_attribute WHERE userID = :userID AND providerID = :providerID AND name = :name")
     @Mapper(ExistsMapper.class)
     boolean existsProviderAttribute(
-            @Bind("userID") Integer userID,
-            @Bind("providerID") Integer providerID,
+            @Bind("userID") Long userID,
+            @Bind("providerID") Long providerID,
             @Bind("name") String attrName
     );
 
     @SqlUpdate("INSERT INTO user_updates_provider_attribute (userID, providerID, name, value) VALUES (:userID, :providerID, :name, :value)")
-    int insertProviderAttribute(
-            @Bind("userID") Integer userID,
-            @Bind("providerID") Integer providerID,
+    void insertProviderAttribute(
+            @Bind("userID") Long userID,
+            @Bind("providerID") Long providerID,
             @Bind("name") String attrName,
             @Bind("value") String value
     );
 
     @SqlUpdate("UPDATE user_updates_provider_attribute SET value = :value WHERE userID = :userID AND providerID = :providerID AND name = :attrName")
     void setProviderAttribute(
-            @Bind("userID") Integer userID,
-            @Bind("providerID") Integer providerID,
+            @Bind("userID") Long userID,
+            @Bind("providerID") Long providerID,
             @Bind("attrName") String attrName,
             @Bind("value") String value
     );

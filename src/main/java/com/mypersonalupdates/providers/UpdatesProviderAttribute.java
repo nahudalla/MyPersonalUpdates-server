@@ -1,22 +1,29 @@
 package com.mypersonalupdates.providers;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mypersonalupdates.db.DBConnection;
 import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.db.actions.UpdatesProviderAttributeActions;
+import com.mypersonalupdates.webserver.json.JSONSerializable;
 
-public class UpdatesProviderAttribute {
-
-    private final Integer attrID;
+/**
+ * Esta clase representa un atributo que puede tener una
+ * actualización {@link com.mypersonalupdates.Update} de
+ * un proveedor {@link UpdatesProvider}.
+ */
+public final class UpdatesProviderAttribute implements JSONSerializable {
+    private final Long attrID;
     private final UpdatesProvider provider;
     private final Boolean multi;
 
-    private UpdatesProviderAttribute(UpdatesProvider provider, Integer attrID, Boolean multi) {
+    private UpdatesProviderAttribute(UpdatesProvider provider, Long attrID, Boolean multi) {
         this.attrID = attrID;
         this.provider = provider;
         this.multi = multi;
     }
 
-    public static UpdatesProviderAttribute create(UpdatesProvider provider, Integer attrID) throws DBException {
+    public static UpdatesProviderAttribute create(UpdatesProvider provider, Long attrID) throws DBException {
         Boolean multi;
 
         try {
@@ -33,7 +40,7 @@ public class UpdatesProviderAttribute {
         return (multi == null) ? null : new UpdatesProviderAttribute(provider, attrID, multi);
     }
 
-    public Integer getAttrID() {
+    public Long getAttrID() {
         return this.attrID;
     }
 
@@ -93,5 +100,13 @@ public class UpdatesProviderAttribute {
 
         return this.getProvider().getID().equals(attribute.getProvider().getID()) &&
                 this.getAttrID().equals(attribute.getAttrID());
+    }
+
+    @Override
+    public JsonElement toJSON() {
+        JsonObject object = new JsonObject();
+        object.addProperty("attrID", this.attrID);
+        object.addProperty("providerID", this.provider.getID());
+        return object;
     }
 }
