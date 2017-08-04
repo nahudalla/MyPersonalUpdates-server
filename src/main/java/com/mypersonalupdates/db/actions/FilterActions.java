@@ -17,7 +17,7 @@ public interface FilterActions {
             @Bind("TYPE") String type
     );
 
-    @SqlUpdate("DELETE FROM filter WHERE ID = :ID LIMIT 1")
+    @SqlUpdate("DELETE IGNORE FROM filter WHERE ID = :ID LIMIT 1")
     int remove(
             @Bind("ID") Long ID
     );
