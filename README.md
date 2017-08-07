@@ -5,10 +5,10 @@
 Para compilar este proyecto adecuadamente, es necesaria la librería
 Gson de Google, versión 2.8.2 o superior. Actualmente (Julio de 2017)
 esta versión sólo está disponible como SNAPSHOT de GitHub y es
-necesario compilado manual.
+necesario compilado e instalación con Maven manual.
 
-El resto de dependencias se incluyen en el archivo pom.xml para
-descargar con Maven 2.
+El resto de dependencias que se incluyen en el archivo pom.xml se
+descargan automáticamente con Maven 2.
 
 ## Configuración
 

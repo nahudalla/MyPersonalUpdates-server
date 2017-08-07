@@ -26,7 +26,7 @@ public final class CredentialsSyntaxValidator<T> extends Handler<T> {
     private static final String PASSWORD_KEY = "password";
 
     private static final Response INVALID_DATA_RESPONSE = new Response.Builder(Handler.BAD_REQUEST_RESPONSE)
-            .setType("InvalidUserCredenctials")
+            .setType("InvalidUserCredentials")
             .setMessage("Las credenciales de usuario no tienen el formato correcto.")
             .build();
 

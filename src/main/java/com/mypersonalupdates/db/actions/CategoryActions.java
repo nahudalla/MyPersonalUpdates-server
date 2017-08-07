@@ -27,7 +27,7 @@ public interface CategoryActions {
             @Bind("name") String name
     );
 
-    @SqlUpdate("DELETE FROM category WHERE userID = :userID AND name = :name")
+    @SqlUpdate("DELETE IGNORE FROM category WHERE userID = :userID AND name = :name")
     int remove(
             @Bind("userID") Long userID,
             @Bind("name") String name
@@ -54,7 +54,7 @@ public interface CategoryActions {
             @Bind("providerID") Long providerID
     );
 
-    @SqlUpdate("DELETE FROM category_provider WHERE userID = :userID AND name = :name AND providerID = :providerID")
+    @SqlUpdate("DELETE IGNORE FROM category_provider WHERE userID = :userID AND name = :name AND providerID = :providerID")
     int removeProvider(
             @Bind("userID") Long userID,
             @Bind("name") String name,
