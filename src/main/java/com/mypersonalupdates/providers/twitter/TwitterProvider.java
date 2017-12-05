@@ -3,6 +3,7 @@ package com.mypersonalupdates.providers.twitter;
 import com.mypersonalupdates.Config;
 import com.mypersonalupdates.filters.Filter;
 import com.mypersonalupdates.exceptions.UserNotLoggedInToProviderException;
+import com.mypersonalupdates.providers.twitter.request_processors.TwitterLoginCheckProcessor;
 import com.mypersonalupdates.realtime.UpdatesConsumer;
 import com.mypersonalupdates.UpdatesProvidersManager;
 import com.mypersonalupdates.db.DBConnection;
@@ -135,6 +136,7 @@ public final class TwitterProvider implements UpdatesProvider {
         // Registro de las acciones disponibles
         REQUEST_PROCESSORS.put("loginURL", new TwitterLoginURLRequestProcessor());
         REQUEST_PROCESSORS.put("login", new TwitterLoginCallbackRequestProcessor());
+        REQUEST_PROCESSORS.put("loginCheck", new TwitterLoginCheckProcessor());
         REQUEST_PROCESSORS.put("userLookup", new TwitterUserLookupRequestProcessor());
     }
 
