@@ -156,7 +156,6 @@ public final class User {
         }
     }
 
-    // TODO: arreglar nombre name->attributeName en diagrama
     public String getAttribute(UpdatesProvider provider, String attributeName) throws DBException {
         try {
             return DBConnection.getInstance().withHandle(
@@ -171,7 +170,6 @@ public final class User {
         }
     }
 
-    // TODO: arreglar nombres en diagrama
     public void setAttribute(UpdatesProvider provider, String attributeName, String newValue) throws DBException {
         UserActions actions = DBConnection.getInstance().onDemand(UserActions.class);
 

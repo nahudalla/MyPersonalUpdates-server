@@ -42,7 +42,6 @@ public abstract class Filter implements JSONSerializable {
         return rowsAffected != 0;
     }
 
-    //TODO: Agregar en el diagrama de clases
     protected static Long create(String type) throws DBException {
         try {
             return DBConnection.getInstance().withHandle(
@@ -53,7 +52,6 @@ public abstract class Filter implements JSONSerializable {
         }
     }
 
-    //TODO: Agregar en el diagrama de clases
     public static Filter create(Long ID) throws DBException {
         String filterType;
         try {
@@ -80,7 +78,6 @@ public abstract class Filter implements JSONSerializable {
 
         throw new AssertionError();
     }
-
 
     public abstract Collection<UpdatesProviderAttribute> getAttributes(UpdatesProvider provider);
 
@@ -109,7 +106,6 @@ public abstract class Filter implements JSONSerializable {
         return getID().equals(filter.getID());
     }
 
-    // TODO: agregar al diagrama
     protected static void removeFilterByID(Long filterID) throws DBException {
         try {
             DBConnection.getInstance().withHandle(
@@ -121,8 +117,6 @@ public abstract class Filter implements JSONSerializable {
             throw new DBException(e);
         }
     }
-
-    //TODO: Cambiar en todo el diagrama los LIST y SET por COLLECTION
 
     protected JsonObject toJSON(String type) {
         JsonObject object = new JsonObject();

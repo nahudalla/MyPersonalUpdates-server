@@ -1,9 +1,7 @@
 package com.mypersonalupdates.providers;
 
-import com.mypersonalupdates.filters.Filter;
 import com.mypersonalupdates.exceptions.UserNotLoggedInToProviderException;
-import com.mypersonalupdates.providers.ProviderRequestProcessor;
-import com.mypersonalupdates.providers.UpdatesProviderAttribute;
+import com.mypersonalupdates.filters.Filter;
 import com.mypersonalupdates.realtime.UpdatesConsumer;
 import com.mypersonalupdates.users.User;
 
@@ -14,7 +12,6 @@ import java.util.Map;
  * Esta interfaz representa a un proveedor de actualizaciones.
  */
 public interface UpdatesProvider {
-    // TODO: actualizar diagrama
     Long getID();
     String getName();
     String getDescription();

@@ -17,6 +17,7 @@ import java.util.Collection;
  */
 public final class TwitterUpdate implements Update {
     private static final int TEXT_ATTR_ID = Config.get().getInt("providers.twitter.UpdateAttributesIDs.text");
+    private static final int USERNAME_ATTR_ID = Config.get().getInt("providers.twitter.UpdateAttributesIDs.username");
 
     private final Status status;
 
@@ -43,6 +44,8 @@ public final class TwitterUpdate implements Update {
     public Collection<String> getAttributeValues(UpdatesProviderAttribute attr) {
         if (attr.getAttrID() == TwitterUpdate.TEXT_ATTR_ID) {
             return Lists.newArrayList(this.status.getText());
+        } else if (attr.getAttrID() == TwitterUpdate.USERNAME_ATTR_ID) {
+            return Lists.newArrayList(String.valueOf(this.status.getUser().getId()));
         }
 
         return null;
