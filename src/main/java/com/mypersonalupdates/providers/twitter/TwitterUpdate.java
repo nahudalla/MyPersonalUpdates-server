@@ -25,6 +25,11 @@ public final class TwitterUpdate implements Update {
     }
 
     @Override
+    public Long getID() {
+        return null;
+    }
+
+    @Override
     public UpdatesProvider getProvider() {
         return TwitterProvider.getInstance();
     }

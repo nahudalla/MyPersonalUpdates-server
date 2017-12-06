@@ -55,6 +55,11 @@ public final class LogUpdate implements Update{
         }
     }
 
+    @Override
+    public Long getID() {
+        return this.ID;
+    }
+
     public UpdatesProvider getProvider() {
         try {
             Long providerID = DBConnection.getInstance().withHandle(

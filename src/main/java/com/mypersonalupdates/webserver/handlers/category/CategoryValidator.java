@@ -11,7 +11,7 @@ import com.mypersonalupdates.webserver.handlers.auth.UserAuthHandler;
 
 /**
  * Esta clase se encarga de procesar parte de una petición
- * que necesita de una categoría existent. En particular
+ * que necesita de una categoría existente. En particular
  * se encarga de chequear que la categoría exista.
  * @param <T> Tipo de respuesta esperado al finalizar el procesamiento de la petición
  */
