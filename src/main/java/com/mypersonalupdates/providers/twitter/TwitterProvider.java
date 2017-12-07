@@ -1,20 +1,17 @@
 package com.mypersonalupdates.providers.twitter;
 
 import com.mypersonalupdates.Config;
-import com.mypersonalupdates.filters.Filter;
-import com.mypersonalupdates.exceptions.UserNotLoggedInToProviderException;
-import com.mypersonalupdates.providers.twitter.request_processors.TwitterLoginCheckProcessor;
-import com.mypersonalupdates.realtime.UpdatesConsumer;
 import com.mypersonalupdates.UpdatesProvidersManager;
 import com.mypersonalupdates.db.DBConnection;
 import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.db.actions.UpdatesProviderActions;
+import com.mypersonalupdates.exceptions.UserNotLoggedInToProviderException;
+import com.mypersonalupdates.filters.Filter;
 import com.mypersonalupdates.providers.ProviderRequestProcessor;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
-import com.mypersonalupdates.providers.twitter.request_processors.TwitterLoginCallbackRequestProcessor;
-import com.mypersonalupdates.providers.twitter.request_processors.TwitterLoginURLRequestProcessor;
-import com.mypersonalupdates.providers.twitter.request_processors.TwitterUserLookupRequestProcessor;
+import com.mypersonalupdates.providers.twitter.request_processors.*;
+import com.mypersonalupdates.realtime.UpdatesConsumer;
 import com.mypersonalupdates.users.User;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
@@ -138,6 +135,7 @@ public final class TwitterProvider implements UpdatesProvider {
         REQUEST_PROCESSORS.put("login", new TwitterLoginCallbackRequestProcessor());
         REQUEST_PROCESSORS.put("loginCheck", new TwitterLoginCheckProcessor());
         REQUEST_PROCESSORS.put("userLookup", new TwitterUserLookupRequestProcessor());
+        REQUEST_PROCESSORS.put("userLookByID", new TwitterUserLookupByIDRequestProcessor());
     }
 
     @Override
