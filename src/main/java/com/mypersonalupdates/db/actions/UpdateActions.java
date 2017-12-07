@@ -62,7 +62,14 @@ public abstract class UpdateActions {
             boolean isMultivalued = attribute.isMultivalued();
             boolean firstInserted = false;
 
-            for(String value : update.getAttributeValues(attribute)) {
+            Collection<String> attrValues = update.getAttributeValues(attribute);
+
+            if(attrValues == null) {
+                System.out.println(attrValues);
+                continue;
+            }
+
+            for(String value : attrValues) {
                 if(isMultivalued && firstInserted)
                     break;
 

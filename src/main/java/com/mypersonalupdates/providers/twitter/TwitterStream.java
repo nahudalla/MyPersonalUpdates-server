@@ -113,6 +113,10 @@ public final class TwitterStream implements StatusListener {
         for (UpdatesProviderAttribute attr : TwitterProvider.getInstance().getAttributes()) {
             Collection<String> values = this.getAttributeValuesFromFilters(attr);
 
+            System.out.println("DB_FOLLOWINGS_ATTR_IDS = " + DB_FOLLOWINGS_ATTR_IDS);
+            System.out.println("attr.getAttrID() = " + attr.getAttrID());
+            System.out.println("values = " + values);
+
             if (values.size() == 0)
                 continue;
 
@@ -132,6 +136,7 @@ public final class TwitterStream implements StatusListener {
 
         if (followings.size() > 0) {
             endpoint.followings(followings);
+            System.out.println("followings = " + followings);
         }
 
         if (terms.size() > 0) {

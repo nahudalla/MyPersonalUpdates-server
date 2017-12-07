@@ -135,7 +135,7 @@ public final class TwitterProvider implements UpdatesProvider {
         REQUEST_PROCESSORS.put("login", new TwitterLoginCallbackRequestProcessor());
         REQUEST_PROCESSORS.put("loginCheck", new TwitterLoginCheckProcessor());
         REQUEST_PROCESSORS.put("userLookup", new TwitterUserLookupRequestProcessor());
-        REQUEST_PROCESSORS.put("userLookByID", new TwitterUserLookupByIDRequestProcessor());
+        REQUEST_PROCESSORS.put("userLookupByID", new TwitterUserLookupByIDRequestProcessor());
     }
 
     @Override

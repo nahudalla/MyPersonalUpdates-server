@@ -154,6 +154,6 @@ public abstract class AttributeFilter extends Filter {
         query.appendToCondition("#ATTRS_TABLE#.attrID = ? AND #ATTRS_TABLE#.providerID = ? AND "+valueCondition);
         query.addLongParam(this.attr.getAttrID());
         query.addLongParam(this.attr.getProvider().getID());
-        query.addStringParam(this.value);
+        query.addStringParam(this.value+'*');
     }
 }

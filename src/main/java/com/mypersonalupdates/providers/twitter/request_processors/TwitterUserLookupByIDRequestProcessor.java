@@ -18,7 +18,7 @@ public class TwitterUserLookupByIDRequestProcessor implements ProviderRequestPro
     @Override
     public void process(User user, Request request, Response response)
             throws RequestProcessingException, SealedException, DBException {
-        JsonElement element = request.getBodyItem("username");
+        JsonElement element = request.getBodyItem("id");
 
         if(element == null || !element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString())
             throw new RequestProcessingException(response.set(Handler.BAD_REQUEST_RESPONSE));
