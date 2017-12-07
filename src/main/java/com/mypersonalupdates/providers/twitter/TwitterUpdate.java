@@ -18,6 +18,9 @@ import java.util.Collection;
 public final class TwitterUpdate implements Update {
     private static final int TEXT_ATTR_ID = Config.get().getInt("providers.twitter.UpdateAttributesIDs.text");
     private static final int USERNAME_ATTR_ID = Config.get().getInt("providers.twitter.UpdateAttributesIDs.username");
+    private static final int IS_RETWEET_ATTR_ID= Config.get().getInt("providers.twitter.UpdateAttributesIDs.isRetweet");
+    private static final int RETWEET_STATUS_ID_ATTR_ID = Config.get().getInt("providers.twitter.UpdateAttributesIDs.retweetStatus");
+    private static final int RETWEET_STATUS_USER_ATTR_ID = Config.get().getInt("providers.twitter.UpdateAttributesIDs.retweetUser");
 
     private final Status status;
 
@@ -46,6 +49,12 @@ public final class TwitterUpdate implements Update {
             return Lists.newArrayList(this.status.getText());
         } else if (attr.getAttrID() == TwitterUpdate.USERNAME_ATTR_ID) {
             return Lists.newArrayList(String.valueOf(this.status.getUser().getId()));
+        } else if (attr.getAttrID() == TwitterUpdate.IS_RETWEET_ATTR_ID) {
+            return Lists.newArrayList(String.valueOf(this.status.isRetweet()));
+        } else if (attr.getAttrID() == TwitterUpdate.RETWEET_STATUS_ID_ATTR_ID) {
+            return Lists.newArrayList(String.valueOf(this.status.getRetweetedStatus()));
+        } else if (attr.getAttrID() == TwitterUpdate.RETWEET_STATUS_USER_ATTR_ID) {
+            return Lists.newArrayList(String.valueOf(this.status.getRetweetedStatus().getUser()));
         }
 
         return null;
