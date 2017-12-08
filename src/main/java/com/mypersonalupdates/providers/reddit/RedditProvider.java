@@ -10,6 +10,7 @@ import com.mypersonalupdates.providers.ProviderRequestProcessor;
 import com.mypersonalupdates.providers.UpdatesProvider;
 import com.mypersonalupdates.providers.UpdatesProviderAttribute;
 import com.mypersonalupdates.providers.reddit.request_processors.RedditLoginCallbackRequestProcessor;
+import com.mypersonalupdates.providers.reddit.request_processors.RedditLoginCheckProcessor;
 import com.mypersonalupdates.realtime.UpdatesConsumer;
 import com.mypersonalupdates.users.User;
 
@@ -66,6 +67,8 @@ public class RedditProvider implements UpdatesProvider {
     public static void setup(){
         UpdatesProvidersManager.getInstance().addProvider(new RedditProvider());
         RedditProvider.REQUEST_PROCESSORS.put("login", new RedditLoginCallbackRequestProcessor());
+        RedditProvider.REQUEST_PROCESSORS.put("loginCheck", new RedditLoginCheckProcessor());
+
     }
 
     @Override
