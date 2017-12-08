@@ -65,7 +65,6 @@ public abstract class UpdateActions {
             Collection<String> attrValues = update.getAttributeValues(attribute);
 
             if(attrValues == null) {
-                System.out.println(attrValues);
                 continue;
             }
 

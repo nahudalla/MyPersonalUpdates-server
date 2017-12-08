@@ -51,10 +51,12 @@ public final class TwitterUpdate implements Update {
             return Lists.newArrayList(String.valueOf(this.status.getUser().getId()));
         } else if (attr.getAttrID() == TwitterUpdate.IS_RETWEET_ATTR_ID) {
             return Lists.newArrayList(String.valueOf(this.status.isRetweet()));
-        } else if (attr.getAttrID() == TwitterUpdate.RETWEETED_STATUS_ID_ATTR_ID) {
-            return Lists.newArrayList(String.valueOf(this.status.getRetweetedStatus().getId()));
-        } else if (attr.getAttrID() == TwitterUpdate.RETWEETED_STATUS_USER_ATTR_ID) {
-            return Lists.newArrayList(String.valueOf(this.status.getRetweetedStatus().getUser().getId()));
+        } else if(this.status.isRetweet()) {
+            if (attr.getAttrID() == TwitterUpdate.RETWEETED_STATUS_ID_ATTR_ID) {
+                return Lists.newArrayList(String.valueOf(this.status.getRetweetedStatus().getId()));
+            } else if (attr.getAttrID() == TwitterUpdate.RETWEETED_STATUS_USER_ATTR_ID) {
+                return Lists.newArrayList(String.valueOf(this.status.getRetweetedStatus().getUser().getId()));
+            }
         }
 
         return null;

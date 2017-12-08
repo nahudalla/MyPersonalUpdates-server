@@ -66,11 +66,10 @@ public class RedditProvider implements UpdatesProvider {
     public static void setup(){
         UpdatesProvidersManager.getInstance().addProvider(new RedditProvider());
         RedditProvider.REQUEST_PROCESSORS.put("login", new RedditLoginCallbackRequestProcessor());
-
     }
 
     @Override
     public Map<String, ProviderRequestProcessor> getActions() {
-        return null;
+        return RedditProvider.REQUEST_PROCESSORS;
     }
 }

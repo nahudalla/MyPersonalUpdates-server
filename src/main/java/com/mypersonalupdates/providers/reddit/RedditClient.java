@@ -14,7 +14,7 @@ import java.time.Instant;
 public class RedditClient {
     private static final String LOGIN_CALLBACK_URL = Config.get().getString("providers.reddit.login_callback_url");
     private static final String APP_CLIENT_ID = Config.get().getString("providers.reddit.clientID");
-    private static final String APP_CONSUMER_SECRET = Config.get().getString("providers.redditconsumerSecret");
+    private static final String APP_CONSUMER_SECRET = Config.get().getString("providers.reddit.consumerSecret");
 
     private static final RedditClient instance = new RedditClient();
 
