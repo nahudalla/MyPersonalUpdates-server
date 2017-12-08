@@ -131,7 +131,7 @@ public final class TwitterProvider implements UpdatesProvider {
         UpdatesProvidersManager.getInstance().addProvider(new TwitterProvider());
 
         // Registro de las acciones disponibles
-        REQUEST_PROCESSORS.put("loginURL", new TwitterLoginURLRequestProcessor());
+        REQUEST_PROCESSORS.put("loginURL", new TwitterLoginURLRequestProcessor()); // devuelve URL de autorización
         REQUEST_PROCESSORS.put("login", new TwitterLoginCallbackRequestProcessor());
         REQUEST_PROCESSORS.put("loginCheck", new TwitterLoginCheckProcessor());
         REQUEST_PROCESSORS.put("userLookup", new TwitterUserLookupRequestProcessor());
