@@ -26,17 +26,16 @@ public class RedditUpdate implements Update{
 
     private JsonObject data = null;
     private String kind = null;
-    private String source_username, source_subredditname;
+    private RedditResource source;
 
-    public RedditUpdate (JsonObject jsonObject, String source_username, String source_subredditname){
+    public RedditUpdate (JsonObject jsonObject, RedditResource redditResource){
         try {
         this.kind = jsonObject.get("kind").getAsString();
         } catch (Exception e) {}
         try {
             this.data = jsonObject.get("data").getAsJsonObject();
         } catch (Exception e) {}
-        this.source_username = source_username;
-        this.source_subredditname = source_subredditname;
+        this.source = redditResource;
     };
 
     @Override
@@ -82,11 +81,11 @@ public class RedditUpdate implements Update{
         else if (attr.getAttrID().equals(AUTHOR_ATTR_ID))
             valueAttr = this.data.get("author");
 
-        else if (attr.getAttrID().equals(SOURCE_USERNAME_ATTR_ID))
-            return Lists.newArrayList(this.source_username);
+        else if (attr.getAttrID().equals(SOURCE_USERNAME_ATTR_ID) && this.source.isUserResource())
+            return Lists.newArrayList(this.source.getResourceName());
 
-        else if (attr.getAttrID().equals(SOURCE_SUBREDDITNAME_ATTR_ID))
-            return Lists.newArrayList(this.source_subredditname);
+        else if (attr.getAttrID().equals(SOURCE_SUBREDDITNAME_ATTR_ID) && this.source.isSubredditResource())
+            return Lists.newArrayList(this.source.getResourceName());
 
         try {
             return valueAttr != null ? Lists.newArrayList(valueAttr.getAsString()) : null;
@@ -98,7 +97,7 @@ public class RedditUpdate implements Update{
     @Override
     public String getIDFromProvider() {
         try {
-            return this.data.get("id").getAsString();
+            return this.data.get("name").getAsString();
         } catch (Exception e){
             return null;
         }

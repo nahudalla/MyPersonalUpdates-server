@@ -15,6 +15,19 @@ public class RedditClient {
     private static final String USER_AGENT = Config.get().getString("providers.reddit.userAgent");
 
     private final OkHttpClient client = new OkHttpClient();
+    private String auth_token;
+
+    public RedditClient() {
+        this.auth_token = null;
+    }
+
+    public RedditClient(String auth_token) {
+        this.auth_token = auth_token;
+    }
+
+    public void setAuth_token(String auth_token) {
+        this.auth_token = auth_token;
+    }
 
     // Hacer petición, si hay respuesta me la devuelve en formato de JSON.
 
@@ -32,14 +45,15 @@ public class RedditClient {
         return null;
     }
 
-    private Request.Builder generateRequest(String url, String token){
-        if (token != null) {
-            return new Request.Builder()
-                    .url(url)
-                    .header("Authorization", "bearer "+token);
-            }
+    private Request.Builder generateRequest(String url) {
+        return new Request.Builder()
+                .url(url)
+                .header("Authorization", "bearer " + this.auth_token);
+    }
 
-        return null;
+
+    public JsonObject GET(String url) {
+        return this.doRequest(this.generateRequest(url).url(url).build());
     }
 
     // Configura un usuario del sistema con las credenciales de Reddit

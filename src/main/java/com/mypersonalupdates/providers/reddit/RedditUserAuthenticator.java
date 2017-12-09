@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.users.User;
-import okhttp3.Response;
 
 import java.time.Instant;
 
@@ -16,6 +15,9 @@ public class RedditUserAuthenticator {
     private final User user;
     private final RedditProvider provider = RedditProvider.getInstance();
     private final RedditClient client = new RedditClient();
+
+    private String token = null;
+    private Instant expire_date = null;
 
     public RedditUserAuthenticator(User user) {
         this.user = user;
@@ -82,15 +84,17 @@ public class RedditUserAuthenticator {
         return null;
     }
 
-    public String getRedditUserAuthToken() {
-        String access_token = null;
+    public String getAuthToken() {
+        if (this.token != null && this.expire_date != null && !Instant.now().isAfter(this.expire_date))
+            return this.token;
+
         try {
-            access_token = this.user.getAttribute(this.provider, ACCESS_TOKEN_ATTR_NAME);
+            this.token = this.user.getAttribute(this.provider, ACCESS_TOKEN_ATTR_NAME);
         } catch (DBException e) {
             e.printStackTrace();
         }
 
-        if(access_token != null) {
+        if(this.token != null) {
             String expire_date = null;
             try {
                 expire_date = this.user.getAttribute(this.provider, EXPIRE_DATE_ATTR_NAME);
@@ -99,19 +103,18 @@ public class RedditUserAuthenticator {
             }
 
             if(expire_date != null) {
-                Instant expire_instant;
                 try {
-                    expire_instant = Instant.ofEpochMilli(Long.valueOf(expire_date));
+                    this.expire_date = Instant.ofEpochMilli(Long.valueOf(expire_date));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     return null;
                 }
 
-                if(Instant.now().isAfter(expire_instant)) {
+                if(Instant.now().isAfter(this.expire_date)) {
                     return this.refreshAuthToken();
                 }
 
-                return access_token;
+                return this.token;
             }
         }
 

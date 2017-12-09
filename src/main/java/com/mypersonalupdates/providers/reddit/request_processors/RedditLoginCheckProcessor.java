@@ -14,7 +14,7 @@ public class RedditLoginCheckProcessor implements ProviderRequestProcessor {
     public void process(User user, Request request, Response response) throws RequestProcessingException, SealedException, DBException {
         RedditUserAuthenticator redditUserAuthenticator = new RedditUserAuthenticator(user);
 
-        String userToken = redditUserAuthenticator.getRedditUserAuthToken();
+        String userToken = redditUserAuthenticator.getAuthToken();
 
         response
                 .setType("RedditLoginCheck")
