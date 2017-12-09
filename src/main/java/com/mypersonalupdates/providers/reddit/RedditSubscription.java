@@ -34,18 +34,22 @@ public class RedditSubscription {
             throw new UserNotLoggedInToProviderException();
         }
 
-        for (String username : username_values){
-            RedditResource username_resource = new RedditUserResource(authenticator, username);
-            RedditUpdatesFetcher fetcher = new RedditUpdatesFetcher(filter, consumer, username_resource);
-            this.fetchers.add(fetcher);
-            (new Thread(fetcher)).start();
+        if(username_values != null) {
+            for (String username : username_values) {
+                RedditResource username_resource = new RedditUserResource(authenticator, username);
+                RedditUpdatesFetcher fetcher = new RedditUpdatesFetcher(filter, consumer, username_resource);
+                this.fetchers.add(fetcher);
+                (new Thread(fetcher)).start();
+            }
         }
 
-        for (String subreddit : subreddit_values){
-            RedditResource subreddit_resource = new RedditUserResource(authenticator, subreddit);
-            RedditUpdatesFetcher fetcher = new RedditUpdatesFetcher(filter, consumer, subreddit_resource);
-            this.fetchers.add(fetcher);
-            (new Thread(fetcher)).start();
+        if(subreddit_values != null) {
+            for (String subreddit : subreddit_values) {
+                RedditResource subreddit_resource = new RedditSubredditResource(authenticator, subreddit);
+                RedditUpdatesFetcher fetcher = new RedditUpdatesFetcher(filter, consumer, subreddit_resource);
+                this.fetchers.add(fetcher);
+                (new Thread(fetcher)).start();
+            }
         }
     }
 

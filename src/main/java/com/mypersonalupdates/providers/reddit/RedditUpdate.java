@@ -75,10 +75,12 @@ public class RedditUpdate implements Update{
         else if (attr.getAttrID().equals(PREVIEW_IMAGES_ATTR_ID))
             return this.getPreviewImages();
 
-        else if (attr.getAttrID().equals(BODY_ATTR_ID))
-            valueAttr = this.data.get("body");
-
-        else if (attr.getAttrID().equals(AUTHOR_ATTR_ID))
+        else if (attr.getAttrID().equals(BODY_ATTR_ID)) {
+            if(this.kind.equals("t1"))
+                valueAttr = this.data.get("body");
+            else
+                valueAttr = this.data.get("selftext");
+        }else if (attr.getAttrID().equals(AUTHOR_ATTR_ID))
             valueAttr = this.data.get("author");
 
         else if (attr.getAttrID().equals(SOURCE_USERNAME_ATTR_ID) && this.source.isUserResource())

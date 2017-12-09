@@ -7,7 +7,7 @@ public class RedditUserResource extends RedditResource {
     }
 
     @Override
-    public String getResourceURL() {
+    public String getRawResourceURL() {
         return "https://www.reddit.com/u/"+this.getResourceName();
     }
 

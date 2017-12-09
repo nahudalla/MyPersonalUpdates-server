@@ -2,6 +2,7 @@ package com.mypersonalupdates.providers.reddit;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mypersonalupdates.exceptions.UserNotLoggedInToProviderException;
 import com.mypersonalupdates.filters.Filter;
 import com.mypersonalupdates.realtime.UpdatesConsumer;
 
@@ -26,32 +27,29 @@ public class RedditUpdatesFetcher implements Runnable {
         Instant wakeUpAt;
 
         while (this.running) {
-            jsonObject = this.resource.fetchData(lastID);
+            try {
+                jsonObject = this.resource.fetchData(lastID);
+            } catch (UserNotLoggedInToProviderException e) {
+                e.printStackTrace();
+                return;
+            }
 
             if (jsonObject != null) {
-                JsonElement aux = jsonObject.get("data");
+                JsonElement aux = jsonObject.get("children");
+                if (aux != null && aux.isJsonArray()) {
+                    boolean firstFound = false;
+                    for (JsonElement element : aux.getAsJsonArray()) {
+                        if (element != null && element.isJsonObject()) {
+                            RedditUpdate update = new RedditUpdate(element.getAsJsonObject(), this.resource);
 
-                if (aux != null && jsonObject.get("data").isJsonObject()){
-                    JsonObject data = aux.getAsJsonObject();
-
-                    aux = data.get("children");
-
-                    if (aux != null && aux.isJsonArray()) {
-                        boolean firstFound = false;
-                        for (JsonElement element : aux.getAsJsonArray()) {
-                            if (element.isJsonObject()) {
-                                RedditUpdate update = new RedditUpdate(element.getAsJsonObject(), this.resource);
-
-                                if(!firstFound) {
-                                    firstFound = true;
-                                    lastID = update.getIDFromProvider();
-                                }
-
-                                if (this.filter.test(update))
-                                    this.updatesConsumer.handleUpdate(update);
+                            if (!firstFound) {
+                                firstFound = true;
+                                lastID = update.getIDFromProvider();
                             }
-                        }
 
+                            if (this.filter.test(update))
+                                this.updatesConsumer.handleUpdate(update);
+                        }
                     }
                 }
             }
@@ -62,7 +60,7 @@ public class RedditUpdatesFetcher implements Runnable {
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {}
-            } while (wakeUpAt.isBefore(Instant.now()));
+            } while (!wakeUpAt.isBefore(Instant.now()));
         }
     }
 

@@ -7,7 +7,7 @@ public class RedditSubredditResource extends RedditResource {
     }
 
     @Override
-    public String getResourceURL() {
+    public String getRawResourceURL() {
         return "https://www.reddit.com/r/"+this.getResourceName();
     }
 
@@ -20,6 +20,4 @@ public class RedditSubredditResource extends RedditResource {
     protected boolean isSubredditResource() {
         return true;
     }
-
-
 }

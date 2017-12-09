@@ -3,7 +3,9 @@ package com.mypersonalupdates.providers.reddit;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.mypersonalupdates.Config;
+import com.mypersonalupdates.exceptions.UserNotLoggedInToProviderException;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -38,6 +40,8 @@ public class RedditClient {
             response = this.client.newCall(request).execute();
             if (response.isSuccessful())
                 return this.responseToJsonObject(response);
+            else
+                System.err.println("ERROR: Reddit client request not successful: "+String.valueOf(response.code())+" "+response.message());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,15 +49,17 @@ public class RedditClient {
         return null;
     }
 
-    private Request.Builder generateRequest(String url) {
+    private Request.Builder generateRequest(String url) throws UserNotLoggedInToProviderException {
+        if (this.auth_token == null)
+            throw new UserNotLoggedInToProviderException();
         return new Request.Builder()
-                .url(url)
-                .header("Authorization", "bearer " + this.auth_token);
+                .url(url);
+               // .header("Authorization", "bearer " + this.auth_token);
     }
 
 
-    public JsonObject GET(String url) {
-        return this.doRequest(this.generateRequest(url).url(url).build());
+    public JsonObject GET(String url) throws UserNotLoggedInToProviderException {
+        return this.doRequest(this.generateRequest(url).build());
     }
 
     // Configura un usuario del sistema con las credenciales de Reddit
@@ -102,7 +108,12 @@ public class RedditClient {
         try {
             ResponseBody responseBody = response.body();
             if (responseBody != null) {
-                element = parser.parse(responseBody.string());
+                try {
+                    element = parser.parse(responseBody.string());
+                }catch (JsonSyntaxException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -2,6 +2,7 @@ package com.mypersonalupdates.providers.reddit;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mypersonalupdates.exceptions.UserNotLoggedInToProviderException;
 
 public abstract class RedditResource {
     private final RedditUserAuthenticator authenticator;
@@ -17,29 +18,37 @@ public abstract class RedditResource {
         return this.resourceName;
     }
 
-    public JsonObject fetchData(){
+    public JsonObject fetchData() throws UserNotLoggedInToProviderException {
         return this.fetchData(null);
     }
 
-    public JsonObject fetchData(String fromID){
+    public JsonObject fetchData(String fromID) throws UserNotLoggedInToProviderException {
         this.client.setAuth_token(this.authenticator.getAuthToken());
         // TODO : poner const en arch de conf
         String url = this.getResourceURL()+"?limit=100";
         JsonObject jsonObject;
         if (fromID == null){
-            jsonObject = client.GET(url);
+            jsonObject = this.client.GET(url);
         } else
-            jsonObject = client.GET(url+"&before="+fromID);
+            jsonObject = this.client.GET(url+"&before="+fromID);
 
-        JsonElement aux = jsonObject.get("kind");
-        if (aux != null && aux.getAsString().equals("Listing"))
-            return jsonObject.get("data") != null ? jsonObject.get("data").getAsJsonObject() : null;
+        if(jsonObject != null) {
+            JsonElement aux = jsonObject.get("kind");
+            if (aux != null && aux.getAsString().equals("Listing"))
+                return jsonObject.get("data") != null ? jsonObject.get("data").getAsJsonObject() : null;
+            System.err.println("ERROR al obtener datos de Reddit: "+jsonObject.toString());
+        } else {
+            System.err.println("ERROR al obtener datos de Reddit.");
+        }
 
-        System.err.println("ERROR al obtener datos de Reddit: "+jsonObject.toString());
         return null;
     }
 
-    protected abstract String getResourceURL();
+    public String getResourceURL() {
+        return this.getRawResourceURL()+".json";
+    }
+
+    protected abstract String getRawResourceURL();
     protected abstract boolean isUserResource();
     protected abstract boolean isSubredditResource();
 }

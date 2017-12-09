@@ -11,7 +11,6 @@ public class Main {
     private static final int SERVER_PORT = Config.get().getInt("webserver.port");
 
     public static void main(String[] args) {
-        System.out.println(Instant.now().toEpochMilli());
         TwitterProvider.setup();
         RedditProvider.setup();
         Log.setup();

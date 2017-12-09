@@ -94,8 +94,6 @@ public final class RealTimeStreamsManager {
             if(!this.suspendedCategories.contains(category))
                 listener.subscribe();
 
-
-
             System.out.println("Client subscribed to stream: "+id);
 
             return id;
