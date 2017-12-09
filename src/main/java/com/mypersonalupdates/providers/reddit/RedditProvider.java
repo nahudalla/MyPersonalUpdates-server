@@ -3,6 +3,7 @@ package com.mypersonalupdates.providers.reddit;
 import com.mypersonalupdates.Config;
 import com.mypersonalupdates.UpdatesProvidersManager;
 import com.mypersonalupdates.db.DBConnection;
+import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.db.actions.UpdatesProviderActions;
 import com.mypersonalupdates.exceptions.UserNotLoggedInToProviderException;
 import com.mypersonalupdates.filters.Filter;
@@ -23,6 +24,7 @@ public class RedditProvider implements UpdatesProvider {
     private static final UpdatesProviderActions DB_ACTIONS = DBConnection.getInstance().onDemand(UpdatesProviderActions.class);
     private static final Map<String, ProviderRequestProcessor> REQUEST_PROCESSORS = new Hashtable<>();
 
+    private final Map<Long, RedditSubscription> subscriptions = new Hashtable<>();
     private RedditProvider() {}
 
     public static RedditProvider getInstance() {
@@ -51,17 +53,33 @@ public class RedditProvider implements UpdatesProvider {
 
     @Override
     public Long subscribe(User user, Filter filter, UpdatesConsumer consumer) throws UserNotLoggedInToProviderException {
-        return null;
+        try {
+            RedditSubscription subscription = new RedditSubscription(user, filter, consumer);
+            this.subscriptions.put(subscription.getID(), subscription);
+            return subscription.getID();
+        } catch (DBException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public boolean unsubscribe(User user, Long subscriberID) {
+        RedditSubscription subscription = this.subscriptions.remove(subscriberID);
+        if (subscription != null) {
+            subscription.stop();
+            return true;
+        }
+
         return false;
     }
 
     @Override
     public void stop() {
-
+        for (RedditSubscription subscription : this.subscriptions.values()) {
+            subscription.stop();
+        }
+        this.subscriptions.clear();
     }
 
     public static void setup(){

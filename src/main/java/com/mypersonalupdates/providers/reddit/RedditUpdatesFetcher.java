@@ -11,6 +11,7 @@ public class RedditUpdatesFetcher implements Runnable {
     private final RedditResource resource;
     private final UpdatesConsumer updatesConsumer;
     private final Filter filter;
+    private boolean running = true;
 
     public RedditUpdatesFetcher(Filter filter, UpdatesConsumer updatesConsumer, RedditResource redditResource) {
         this.updatesConsumer = updatesConsumer;
@@ -24,7 +25,7 @@ public class RedditUpdatesFetcher implements Runnable {
         JsonObject jsonObject;
         Instant wakeUpAt;
 
-        while (true) {
+        while (this.running) {
             jsonObject = this.resource.fetchData(lastID);
 
             if (jsonObject != null) {
@@ -63,5 +64,9 @@ public class RedditUpdatesFetcher implements Runnable {
                 } catch (InterruptedException e) {}
             } while (wakeUpAt.isBefore(Instant.now()));
         }
+    }
+
+    public synchronized void stop(){
+        this.running = false;
     }
 }
