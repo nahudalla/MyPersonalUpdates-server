@@ -4,12 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mypersonalupdates.Config;
-import com.mypersonalupdates.db.DBException;
-import com.mypersonalupdates.users.User;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.time.Instant;
 
 public class RedditClient {
     private static final String LOGIN_CALLBACK_URL = Config.get().getString("providers.reddit.login_callback_url");
@@ -18,6 +15,8 @@ public class RedditClient {
     private static final String USER_AGENT = Config.get().getString("providers.reddit.userAgent");
 
     private final OkHttpClient client = new OkHttpClient();
+
+    // Hacer petición, si hay respuesta me la devuelve en formato de JSON.
 
     private JsonObject doRequest(Request request) {
         Response response;
@@ -29,6 +28,16 @@ public class RedditClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return null;
+    }
+
+    private Request.Builder generateRequest(String url, String token){
+        if (token != null) {
+            return new Request.Builder()
+                    .url(url)
+                    .header("Authorization", "bearer "+token);
+            }
 
         return null;
     }
