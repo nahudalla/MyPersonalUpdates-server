@@ -17,6 +17,7 @@ servidor.
 * Los parámetros de configuración sin valor por defecto son:   *
 * - Parámetros de conexión a la base de datos                  *
 * - Identificador y clave de acceso a la API de Twitter        *
+* - Clave de acceso a la API de Reddit                         *
 * - Clave de firma para los tokens de acceso JWT               *
 *                                                              *
 * Los valores que se deben incluir en el archivo "config.conf" *
@@ -43,18 +44,44 @@ package com.mypersonalupdates;
 
 import com.typesafe.config.ConfigFactory;
 
+import java.io.File;
+
 /**
  * Esta clase representa la configuración del sistema
  * almacenada en los archivos "default.conf" y
  * "config.conf".
  */
 public class Config {
-    private static final String DEFAULT_FILENAME = "default.conf";
-    private static final String CONFIG_FILENAME = "config.conf";
+    private static final String DEFAULT_FILENAME;
+    private static final String CONFIG_FILENAME;
 
-    private static final com.typesafe.config.Config config = ConfigFactory.load(Config.CONFIG_FILENAME)
+    static {
+        // DESCOMENTAR PARA ARMAR PAQUETE JAR.
+        // Hace que se cargue la configuración desde afuera del mismo.
+        /*
+        File jarPath=new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        String propertiesPath=jarPath.getParentFile().getAbsolutePath();
+        */
+        DEFAULT_FILENAME = /*propertiesPath + "\\" +*/ "default.conf";
+        CONFIG_FILENAME = /*propertiesPath + "\\" +*/ "config.conf";
+    }
+
+    private static final com.typesafe.config.Config config =
+            // DESCOMENTAR PARA EL JAR
+            /*ConfigFactory.parseFile(
+            new File(Config.CONFIG_FILENAME)*/
+
+            // COMENTAR PARA EL JAR
+            ConfigFactory.load(
+                    Config.CONFIG_FILENAME
+            )
             .withFallback(
-                    ConfigFactory.load(Config.DEFAULT_FILENAME)
+                    // DESCOMENTAR PARA EL JAR
+                    /*ConfigFactory.parseFile(
+                            new File(Config.DEFAULT_FILENAME)*/
+                    ConfigFactory.load(
+                            Config.DEFAULT_FILENAME
+                    )
             );
 
     public static com.typesafe.config.Config get() {

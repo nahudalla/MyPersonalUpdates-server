@@ -63,7 +63,7 @@ public final class RealTimeStreamsManager {
 
     public void suspendCategoryUpdates(Category category) {
         synchronized (this.listenersByID) {
-            if(suspendedCategories.contains(category)) return;
+            if(this.suspendedCategories.contains(category)) return;
 
             Set<RealTimeListener> listeners = this.listenersByCategory.get(category);
 
@@ -93,8 +93,6 @@ public final class RealTimeStreamsManager {
 
             if(!this.suspendedCategories.contains(category))
                 listener.subscribe();
-
-
 
             System.out.println("Client subscribed to stream: "+id);
 

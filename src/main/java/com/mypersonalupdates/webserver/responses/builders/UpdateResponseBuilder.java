@@ -23,6 +23,18 @@ public final class UpdateResponseBuilder extends BuilderBase<UpdateResponseBuild
         this.update = update;
     }
 
+    public UpdateResponseBuilder includeID() {
+        Long id = this.update.getID();
+        if(id != null)
+            this.jsonObject.addProperty("id", id);
+        return this;
+    }
+
+    public UpdateResponseBuilder includeIDFromProvider() {
+        this.jsonObject.addProperty("IDFromProvider", this.update.getIDFromProvider());
+        return this;
+    }
+
     public UpdateResponseBuilder includeProviderID() {
         this.jsonObject.addProperty("providerID", this.update.getProvider().getID());
         return this;
@@ -38,6 +50,10 @@ public final class UpdateResponseBuilder extends BuilderBase<UpdateResponseBuild
 
         for (UpdatesProviderAttribute attribute : this.update.getProvider().getAttributes()) {
             Collection<String> values = this.update.getAttributeValues(attribute);
+
+            if(values == null)
+                continue;
+
             Iterator<String> it = values.iterator();
 
             if(!it.hasNext()) continue;

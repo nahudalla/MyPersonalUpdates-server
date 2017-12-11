@@ -12,6 +12,7 @@ import com.mypersonalupdates.webserver.responses.ResponseData;
 import com.mypersonalupdates.webserver.responses.builders.CategoryResponseBuilder;
 
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,12 +29,16 @@ public final class CategoryListHandler<T> extends UserAuthHandler<T> {
         Type type = new TypeToken<List<ResponseData>>(){}.getType();
         List<ResponseData> categories = new LinkedList<>();
 
-        for (Category category : super.getAuthenticatedUser(request).getCategories()) {
-            categories.add(
-                    new CategoryResponseBuilder(category)
-                            .includeName()
-                            .build()
-            );
+        Collection<Category> categoriesFromDB = super.getAuthenticatedUser(request).getCategories();
+
+        if(categoriesFromDB != null) {
+            for (Category category : categoriesFromDB) {
+                categories.add(
+                        new CategoryResponseBuilder(category)
+                                .includeName()
+                                .build()
+                );
+            }
         }
 
         response.setType("CategoryList")

@@ -10,6 +10,7 @@ import java.util.Collection;
  * Esta clase representa una actualización de un proveedor.
  */
 public interface Update {
+    Long getID();
     UpdatesProvider getProvider();
     Instant getTimestamp();
     Collection<String> getAttributeValues(UpdatesProviderAttribute attr);

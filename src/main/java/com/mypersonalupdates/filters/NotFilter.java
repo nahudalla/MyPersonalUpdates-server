@@ -34,7 +34,6 @@ public final class NotFilter extends Filter{
         return removed;
     }
 
-    //TODO: agregar al diagrama de clases
     public static NotFilter create(Long ID) throws DBException {
         Long filterID;
 

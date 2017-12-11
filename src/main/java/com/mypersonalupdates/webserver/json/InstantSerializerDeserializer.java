@@ -16,7 +16,7 @@ public final class InstantSerializerDeserializer implements JsonSerializer<Insta
     public Instant deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         if(json == null) return null;
 
-        if(!json.isJsonPrimitive() || json.getAsJsonPrimitive().isNumber())
+        if(!json.isJsonPrimitive() || !json.getAsJsonPrimitive().isNumber())
             throw new JsonParseException("Not an Instant.");
 
         return Instant.ofEpochMilli(json.getAsLong());

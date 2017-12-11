@@ -51,7 +51,14 @@ public final class Response extends ConnectionData{
         this.includeStatusInBody = other.includeStatusInBody;
     }
 
-    public Response() {}
+    public Response() {
+        try {
+            this.set(new JsonObject());
+        } catch (SealedException e) {
+            // No puede pasar
+            e.printStackTrace();
+        }
+    }
 
     public Response(Response other) {
         this.copyFrom(other);

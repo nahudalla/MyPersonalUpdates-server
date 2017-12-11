@@ -17,10 +17,9 @@ public class UpdatesProvidersManager {
     public static UpdatesProvidersManager getInstance() {
         return ourInstance;
     }
-    // TODO: falta en diagrama el constructor privado
+
     private UpdatesProvidersManager() {}
 
-    // TODO: actualizar signature en diagrama
     public Collection<UpdatesProvider> getProviders() {
         synchronized (this.providers) {
             return this.providers.values();
@@ -33,7 +32,6 @@ public class UpdatesProvidersManager {
         }
     }
 
-    // TODO: actualizar signature en diagrama
     public void addProvider(UpdatesProvider updatesProvider) {
         synchronized (this.providers) {
             this.providers.put(updatesProvider.getID(), updatesProvider);

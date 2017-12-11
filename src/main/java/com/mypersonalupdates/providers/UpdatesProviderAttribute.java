@@ -78,12 +78,13 @@ public final class UpdatesProviderAttribute implements JSONSerializable {
 
     public String getFilterNotes() throws DBException {
         try {
-            return DBConnection.getInstance().withHandle(
+            String res = DBConnection.getInstance().withHandle(
                     handle -> handle.attach(UpdatesProviderAttributeActions.class).getFilterNotes(
-                            this.attrID,
-                            this.provider.getID()
+                            this.provider.getID(),
+                            this.attrID
                     )
             );
+            return res;
         } catch (Exception e) {
             throw new DBException(e);
         }

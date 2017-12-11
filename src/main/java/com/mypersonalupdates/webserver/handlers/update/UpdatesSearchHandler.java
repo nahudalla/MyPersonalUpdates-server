@@ -58,7 +58,9 @@ public class UpdatesSearchHandler<T> extends UserAuthHandler<T> {
                                 if (input == null) return null;
                                 try {
                                     return new UpdateResponseBuilder(input)
+                                            .includeID()
                                             .includeProviderID()
+                                            .includeIDFromProvider()
                                             .includeTimestamp()
                                             .includeAttributes()
                                             .build();
@@ -74,6 +76,7 @@ public class UpdatesSearchHandler<T> extends UserAuthHandler<T> {
         try {
             filter.remove();
         }catch (Exception e) {
+            e.printStackTrace();
             // TODO: log
         }
     }

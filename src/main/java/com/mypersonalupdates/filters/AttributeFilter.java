@@ -30,7 +30,6 @@ public abstract class AttributeFilter extends Filter {
         this.value = value;
     }
 
-    //TODO: Agregar al diagrama de clases
     protected static UpdatesProviderAttribute getAttributeFromID(Long id) throws DBException {
         try {
             return DBConnection.getInstance().withHandle(
@@ -43,7 +42,6 @@ public abstract class AttributeFilter extends Filter {
         }
     }
 
-    //TODO: Agregar al diagrama de clases
     protected static String getValueFromID(Long id) throws DBException {
         try {
             return DBConnection.getInstance().withHandle(
@@ -56,7 +54,6 @@ public abstract class AttributeFilter extends Filter {
         }
     }
 
-    //TODO: Agregar al diagrama de clases
     private static String getTypeFromID(Long id) throws DBException {
         try {
             return DBConnection.getInstance().withHandle(
@@ -69,7 +66,6 @@ public abstract class AttributeFilter extends Filter {
         }
     }
 
-    //TODO: Agregar al diagrama de clases
     public static AttributeFilter create(Long ID) throws DBException {
         String type = AttributeFilter.getTypeFromID(ID);
 
@@ -85,7 +81,6 @@ public abstract class AttributeFilter extends Filter {
         throw new AssertionError();
     }
 
-    //TODO: Agregar al diagrama de clases
     protected static Long create(UpdatesProviderAttribute attr, String value, String type) throws DBException {
         Long filterID;
 
@@ -159,6 +154,6 @@ public abstract class AttributeFilter extends Filter {
         query.appendToCondition("#ATTRS_TABLE#.attrID = ? AND #ATTRS_TABLE#.providerID = ? AND "+valueCondition);
         query.addLongParam(this.attr.getAttrID());
         query.addLongParam(this.attr.getProvider().getID());
-        query.addStringParam(this.value);
+        query.addStringParam(this.value+'*');
     }
 }

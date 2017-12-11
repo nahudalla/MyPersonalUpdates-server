@@ -1,13 +1,13 @@
 package com.mypersonalupdates.log;
 
 import com.mypersonalupdates.Config;
-import com.mypersonalupdates.filters.Filter;
 import com.mypersonalupdates.Update;
 import com.mypersonalupdates.db.DBConnection;
 import com.mypersonalupdates.db.DBException;
 import com.mypersonalupdates.db.actions.CategoryActions;
 import com.mypersonalupdates.exceptions.SealedException;
 import com.mypersonalupdates.exceptions.UserNotLoggedInToProviderException;
+import com.mypersonalupdates.filters.Filter;
 import com.mypersonalupdates.realtime.RealTimeStreamsManager;
 import com.mypersonalupdates.realtime.UpdatesConsumer;
 import com.mypersonalupdates.users.Category;
@@ -37,7 +37,6 @@ public final class Log implements UpdatesConsumer{
     private final ConcurrentLinkedQueue<Update> queue;
     private final Thread thread;
 
-    // TODO: hacer singleton en diagrama
     private static Log instance = null;
     public static Log getInstance() {
         if(Log.instance == null)
@@ -88,8 +87,6 @@ public final class Log implements UpdatesConsumer{
         RealTimeStreamsManager.getInstance().subscribe(category, this);
 
     }
-
-    // TODO: quitar runThread del diagrama
 
     @Override
     public void handleUpdate(Update update) {
