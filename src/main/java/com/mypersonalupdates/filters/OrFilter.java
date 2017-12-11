@@ -13,7 +13,6 @@ import com.mypersonalupdates.log.LogSQLQuery;
 public final class OrFilter extends CompoundFilter{
     public static final String DATABASE_TYPE = "OrFilter";
 
-    //TODO: Agregar al diagrama de clases
     public static OrFilter create(Long ID) throws DBException {
         Filter  filter1 = CompoundFilter.getFilter1FromID(ID),
                 filter2 = CompoundFilter.getFilter2FromID(ID);

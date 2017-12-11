@@ -57,7 +57,6 @@ public final class TwitterProvider implements UpdatesProvider {
 
     private final Hashtable<Long, TwitterStream> streams = new Hashtable<>();
 
-    // TODO: arreglar diagrama
     @Override
     public Long getID() {
         return TwitterProvider.PROVIDER_ID;
@@ -79,7 +78,6 @@ public final class TwitterProvider implements UpdatesProvider {
     }
 
     @Override
-    // TODO: actualizar signature en diagrama
     public Long subscribe(User user, Filter filter, UpdatesConsumer consumer) throws UserNotLoggedInToProviderException {
         TwitterStream stream;
 

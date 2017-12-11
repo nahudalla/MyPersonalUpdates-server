@@ -5,6 +5,7 @@ import com.mypersonalupdates.providers.reddit.RedditProvider;
 import com.mypersonalupdates.providers.twitter.TwitterProvider;
 import com.mypersonalupdates.webserver.Server;
 
+import java.io.File;
 import java.time.Instant;
 
 public class Main {

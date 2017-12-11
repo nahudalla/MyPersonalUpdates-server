@@ -257,7 +257,6 @@ public final class Category {
         return rowsAffected > 0;
     }
 
-    //TODO: Agregar al diagrama de clases
     private static Long getFilterIDFromKeys(Long userID, String name) throws DBException {
         Long FilterID;
         try {

@@ -35,7 +35,6 @@ public abstract class CompoundFilter extends Filter {
         return ret;
     }
 
-    //TODO: Agregar al diagrama de clases
     protected static Filter getFilter1FromID(Long ID) throws DBException {
         try {
             Long id = DBConnection.getInstance().withHandle(
@@ -51,7 +50,6 @@ public abstract class CompoundFilter extends Filter {
         }
     }
 
-    //TODO: Agregar al diagrama de clases
     protected static Filter getFilter2FromID(Long ID) throws DBException {
         try {
             Long id = DBConnection.getInstance().withHandle(
@@ -67,7 +65,6 @@ public abstract class CompoundFilter extends Filter {
         }
     }
 
-    //TODO: Agregar al diagrama de clases
     public static CompoundFilter create(Long ID) throws DBException {
         String typeCompound;
 
@@ -93,7 +90,6 @@ public abstract class CompoundFilter extends Filter {
         throw new AssertionError();
     }
 
-    //TODO: Agregar al diagrama de clases
     protected static Long create(Filter filter1, Filter filter2, String type) throws DBException {
         Long filterID;
 

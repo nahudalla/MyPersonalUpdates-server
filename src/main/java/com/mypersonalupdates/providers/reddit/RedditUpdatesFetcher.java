@@ -2,6 +2,7 @@ package com.mypersonalupdates.providers.reddit;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mypersonalupdates.Config;
 import com.mypersonalupdates.exceptions.UserNotLoggedInToProviderException;
 import com.mypersonalupdates.filters.Filter;
 import com.mypersonalupdates.realtime.UpdatesConsumer;
@@ -9,6 +10,8 @@ import com.mypersonalupdates.realtime.UpdatesConsumer;
 import java.time.Instant;
 
 public class RedditUpdatesFetcher implements Runnable {
+    private static final Long POLLING_WAIT_TIME = Config.get().getLong("providers.reddit.pollingWaitTime");
+
     private final RedditResource resource;
     private final UpdatesConsumer updatesConsumer;
     private final Filter filter;
@@ -54,11 +57,10 @@ public class RedditUpdatesFetcher implements Runnable {
                 }
             }
 
-            // TODO: poner constante con el archivo conf
-            wakeUpAt = Instant.now().plusMillis(2000);
+            wakeUpAt = Instant.now().plusMillis(POLLING_WAIT_TIME);
             do {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(POLLING_WAIT_TIME);
                 } catch (InterruptedException e) {}
             } while (!wakeUpAt.isBefore(Instant.now()));
         }

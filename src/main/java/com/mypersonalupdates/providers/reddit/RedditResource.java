@@ -2,9 +2,12 @@ package com.mypersonalupdates.providers.reddit;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mypersonalupdates.Config;
 import com.mypersonalupdates.exceptions.UserNotLoggedInToProviderException;
 
 public abstract class RedditResource {
+    private static final Long FETCH_SIZE = Config.get().getLong("providers.reddit.fetchSize");
+
     private final RedditUserAuthenticator authenticator;
     private final String resourceName;
     RedditClient client = new RedditClient();
@@ -24,8 +27,7 @@ public abstract class RedditResource {
 
     public JsonObject fetchData(String fromID) throws UserNotLoggedInToProviderException {
         this.client.setAuth_token(this.authenticator.getAuthToken());
-        // TODO : poner const en arch de conf
-        String url = this.getResourceURL()+"?limit=100";
+        String url = this.getResourceURL()+"?limit="+FETCH_SIZE;
         JsonObject jsonObject;
         if (fromID == null){
             jsonObject = this.client.GET(url);
